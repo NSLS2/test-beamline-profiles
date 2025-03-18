@@ -62,7 +62,7 @@ jobs:
             beamline_acronym: "fxi"
           - org: "NSLS-II-HEX"
             repo: "profile_collection"
-            branch: "main"
+            branch: "2025-2.0"
             beamline_acronym: "hex"
           - org: "NSLS-II-HXN"
             repo: "profile_collection"
