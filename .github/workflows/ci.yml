@@ -44,7 +44,7 @@ jobs:
           #   beamline-acronym: "csx"
           - org: "NSLS-II-ESM-1"
             repo: "profile_collection"
-            branch: "2022-lustre-migration"
+            branch: "2025-2.0"
             beamline-acronym: "arpes"
           # - org: "NSLS-II-ESM-2"
           #   repo: "profile_collection"
