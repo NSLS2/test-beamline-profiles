@@ -45,7 +45,7 @@ jobs:
           - org: "NSLS-II-ESM-1"
             repo: "profile_collection"
             branch: "2025-2.0"
-            beamline-acronym: "arpes"
+            beamline-acronym: "esm"
             beamline-redis-prefix: "arpes-"
           # - org: "NSLS-II-ESM-2"
           #   repo: "profile_collection"
