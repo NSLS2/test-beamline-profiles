@@ -46,6 +46,7 @@ jobs:
             repo: "profile_collection"
             branch: "2025-2.0"
             beamline-acronym: "esm"
+            beamline-endstation: "arpes"
             beamline-redis-prefix: "arpes-"
           # - org: "NSLS-II-ESM-2"
           #   repo: "profile_collection"
@@ -152,7 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Integration Tests Against Beamline Profiles
-        uses: NSLS2/gha-beamline-integration-test@2025-1.0-test
+        uses: NSLS2/gha-beamline-integration-test@2025-2.0-test
         with:
           conda_env_url: "https://zenodo.org/records/15171538/files/2025-2.0-py311-tiled.tar.gz"
           conda_env_md5: "3d705483eab31648fae7cf0ce9a77e72"
@@ -160,4 +161,5 @@ jobs:
           repo: "${{ matrix.repos.repo }}"
           branch: "${{ matrix.repos.branch }}"
           beamline-acronym: "${{ matrix.repos.beamline-acronym }}"
+          beamline-endstation: "${{ matrix.repos.beamline-endstation }}"
           beamline-redis-prefix: "${{ matrix.repos.beamline-redis-prefix }}"
