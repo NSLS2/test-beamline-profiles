@@ -27,7 +27,7 @@ jobs:
             beamline-acronym: "bmm"
           - org: "NSLS2"
             repo: "chx-profile-collection"
-            branch: "main"
+            branch: "2025-2.0"
             beamline-acronym: "chx"
           - org: "NSLS2"
             repo: "cms-profile-collection"
