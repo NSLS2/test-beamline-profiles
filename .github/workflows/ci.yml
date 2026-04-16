@@ -124,7 +124,7 @@ jobs:
             beamline-acronym: "tes"
           - org: "NSLS2"
             repo: "tst-profile-collection"
-            branch: "2025-2.0"
+            branch: "main"
             beamline-acronym: "tst"
           - org: "NSLS2"
             repo: "xfm-profile-collection"
