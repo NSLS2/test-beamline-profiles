@@ -18,41 +18,41 @@ jobs:
         # For single-endstation beamlines, beamline-acronym is omitted
         # (defaults to endstation name in the env vars step).
         include:
-          - { endstation: amx,    redis-host: xf17id1-amx-redis1.nsls2.bnl.gov,    qs-host: xf17id1-amx-qs1.nsls2.bnl.gov,    repo: amx-profile-collection }
-          - { endstation: bmm,    redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov,     qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov,     repo: bmm-profile-collection }
-          - { endstation: cdi,    redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov,     qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov,     repo: cdi-profile-collection }
-          - { endstation: chx,    redis-host: xf11id1-chx-redis1.nsls2.bnl.gov,     qs-host: xf11id1-chx-qs1.nsls2.bnl.gov,     repo: chx-profile-collection }
-          - { endstation: cms,    redis-host: xf11bm-cms-redis1.nsls2.bnl.gov,      qs-host: xf11bm-cms-qs1.nsls2.bnl.gov,      repo: cms-profile-collection }
-          - { endstation: csx,    redis-host: xf23id1-csx-redis1.nsls2.bnl.gov,     qs-host: xf23id1-csx-qs1.nsls2.bnl.gov,     repo: csx-profile-collection }
-          - { endstation: fmx,    redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov,     qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov,     repo: fmx-profile-collection }
-          - { endstation: fxi,    redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov,     qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov,     repo: fxi-profile-collection }
-          - { endstation: hex,    redis-host: xf27id1-hex-redis1.nsls2.bnl.gov,     qs-host: xf27id1-hex-qs1.nsls2.bnl.gov,     repo: hex-profile-collection }
-          - { endstation: hxn,    redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov,     qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov,     repo: hxn-profile-collection }
-          - { endstation: ios,    redis-host: xf23id2-ios-redis1.nsls2.bnl.gov,     qs-host: xf23id2-ios-qs1.nsls2.bnl.gov,     repo: ios-profile-collection }
-          - { endstation: isr,    redis-host: xf04id1-isr-redis1.nsls2.bnl.gov,     qs-host: xf04id1-isr-qs1.nsls2.bnl.gov,     repo: isr-profile-collection }
-          - { endstation: iss,    redis-host: xf08id1-iss-redis1.nsls2.bnl.gov,     qs-host: xf08id1-iss-qs1.nsls2.bnl.gov,     repo: iss-profile-collection }
-          - { endstation: ixs,    redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov,     qs-host: xf10id1-ixs-qs1.nsls2.bnl.gov,     repo: ixs-profile-collection }
-          - { endstation: lix,    redis-host: xf16id1-lix-redis1.nsls2.bnl.gov,     qs-host: xf16id1-lix-qs1.nsls2.bnl.gov,     repo: lix-profile-collection }
-          - { endstation: nyx,    redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov,     qs-host: xf19id2-nyx-qs1.nsls2.bnl.gov,     repo: nyx-profile-collection }
-          - { endstation: opls,   redis-host: xf12id1-opls-redis1.nsls2.bnl.gov,    qs-host: xf12id1-opls-qs1.nsls2.bnl.gov,    repo: opls-profile-collection }
-          - { endstation: pdf,    redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov,     qs-host: xf28id1-pdf-qs1.nsls2.bnl.gov,     repo: pdf-profile-collection }
-          - { endstation: qas,    redis-host: xf07bm-qas-redis1.nsls2.bnl.gov,     qs-host: xf07bm-qas-qs1.nsls2.bnl.gov,     repo: qas-profile-collection }
-          - { endstation: six,    redis-host: xf02id1-six-redis1.nsls2.bnl.gov,     qs-host: xf02id1-six-qs1.nsls2.bnl.gov,     repo: six-profile-collection }
-          - { endstation: smi,    redis-host: xf12id2-smi-redis1.nsls2.bnl.gov,     qs-host: xf12id2-smi-qs1.nsls2.bnl.gov,     repo: smi-profile-collection }
-          - { endstation: srx,    redis-host: xf05id2-srx-redis1.nsls2.bnl.gov,     qs-host: xf05id2-srx-qs1.nsls2.bnl.gov,     repo: srx-profile-collection }
-          - { endstation: tes,    redis-host: xf08bm-tes-redis1.nsls2.bnl.gov,      qs-host: xf08bm-tes-qs1.nsls2.bnl.gov,      repo: tes-profile-collection }
-          - { endstation: tst,    redis-host: xf31id1-tst-redis1.nsls2.bnl.gov,     qs-host: xf31id1-tst-qs1.nsls2.bnl.gov,     repo: tst-profile-collection }
-          - { endstation: xfm,    redis-host: xf04bm-xfm-redis1.nsls2.bnl.gov,     qs-host: xf04bm-xfm-qs1.nsls2.bnl.gov,     repo: xfm-profile-collection }
-          - { endstation: xfp,    redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov,     qs-host: xf17bm-xfp-qs1.nsls2.bnl.gov,     repo: xfp-profile-collection }
-          - { endstation: xpd,    redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov,    qs-host: xf28id2-xpd-qs1.nsls2.bnl.gov,    repo: xpd-profile-collection }
+          - { endstation: amx, redis-host: xf17id1-amx-redis1.nsls2.bnl.gov, qs-host: xf17id1-amx-qs1.nsls2.bnl.gov, repo: amx-profile-collection }
+          - { endstation: bmm, redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov, qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov, repo: bmm-profile-collection }
+          - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov, repo: cdi-profile-collection }
+          - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, qs-host: xf11id1-chx-qs1.nsls2.bnl.gov, repo: chx-profile-collection }
+          - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, qs-host: xf11bm-cms-qs1.nsls2.bnl.gov, repo: cms-profile-collection }
+          - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, qs-host: xf23id1-csx-qs1.nsls2.bnl.gov, repo: csx-profile-collection }
+          - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov, repo: fmx-profile-collection }
+          - { endstation: fxi, redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov, qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov, repo: fxi-profile-collection }
+          - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, qs-host: xf27id1-hex-qs1.nsls2.bnl.gov, repo: hex-profile-collection }
+          - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection }
+          - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, qs-host: xf23id2-ios-qs1.nsls2.bnl.gov, repo: ios-profile-collection }
+          - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, qs-host: xf04id1-isr-qs1.nsls2.bnl.gov, repo: isr-profile-collection }
+          - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, qs-host: xf08id1-iss-qs1.nsls2.bnl.gov, repo: iss-profile-collection }
+          - { endstation: ixs, redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov, qs-host: xf10id1-ixs-qs1.nsls2.bnl.gov, repo: ixs-profile-collection }
+          - { endstation: lix, redis-host: xf16id1-lix-redis1.nsls2.bnl.gov, qs-host: xf16id1-lix-qs1.nsls2.bnl.gov, repo: lix-profile-collection }
+          - { endstation: nyx, redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov, qs-host: xf19id2-nyx-qs1.nsls2.bnl.gov, repo: nyx-profile-collection }
+          - { endstation: opls, redis-host: xf12id1-opls-redis1.nsls2.bnl.gov, qs-host: xf12id1-opls-qs1.nsls2.bnl.gov, repo: opls-profile-collection }
+          - { endstation: pdf, redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov, qs-host: xf28id1-pdf-qs1.nsls2.bnl.gov, repo: pdf-profile-collection }
+          - { endstation: qas, redis-host: xf07bm-qas-redis1.nsls2.bnl.gov, qs-host: xf07bm-qas-qs1.nsls2.bnl.gov, repo: qas-profile-collection }
+          - { endstation: six, redis-host: xf02id1-six-redis1.nsls2.bnl.gov, qs-host: xf02id1-six-qs1.nsls2.bnl.gov, repo: six-profile-collection }
+          - { endstation: smi, redis-host: xf12id2-smi-redis1.nsls2.bnl.gov, qs-host: xf12id2-smi-qs1.nsls2.bnl.gov, repo: smi-profile-collection }
+          - { endstation: srx, redis-host: xf05id2-srx-redis1.nsls2.bnl.gov, qs-host: xf05id2-srx-qs1.nsls2.bnl.gov, repo: srx-profile-collection }
+          - { endstation: tes, redis-host: xf08bm-tes-redis1.nsls2.bnl.gov, qs-host: xf08bm-tes-qs1.nsls2.bnl.gov, repo: tes-profile-collection }
+          - { endstation: tst, redis-host: xf31id1-tst-redis1.nsls2.bnl.gov, qs-host: xf31id1-tst-qs1.nsls2.bnl.gov, repo: tst-profile-collection }
+          - { endstation: xfm, redis-host: xf04bm-xfm-redis1.nsls2.bnl.gov, qs-host: xf04bm-xfm-qs1.nsls2.bnl.gov, repo: xfm-profile-collection }
+          - { endstation: xfp, redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov, qs-host: xf17bm-xfp-qs1.nsls2.bnl.gov, repo: xfp-profile-collection }
+          - { endstation: xpd, redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection }
           # Multi-endstation beamlines (beamline-acronym differs from endstation)
-          - { endstation: arpes,  redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov,  qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov,  repo: esm-arpes-profile-collection,        beamline-acronym: esm }
-          - { endstation: xpeem,  redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov,  qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov,  repo: esm-xpeem-profile-collection,        beamline-acronym: esm }
-          - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, qs-host: xf07id1-haxpes-qs1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection,       beamline-acronym: sst }
-          - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, qs-host: xf07id1-nexafs-qs1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection,       beamline-acronym: sst }
-          - { endstation: rsoxs,  redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov,  qs-host: xf07id1-rsoxs-qs1.nsls2.bnl.gov,  repo: sst-rsoxs-profile-collection,        beamline-acronym: sst }
-          - { endstation: maia,   redis-host: xf04bm-maia-redis1.nsls2.bnl.gov,    qs-host: xf04bm-maia-qs1.nsls2.bnl.gov,    repo: xfm-maia-profile-collection,         beamline-acronym: xfm }
-          - { endstation: xpdd,   redis-host: xf28id2-xpdd-redis1.nsls2.bnl.gov,   qs-host: xf28id2-xpdd-qs1.nsls2.bnl.gov,   repo: xpd-profile-collection-ldrd20-31,    beamline-acronym: xpd }
+          - { endstation: arpes, redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov, qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov, repo: esm-arpes-profile-collection, beamline-acronym: esm }
+          - { endstation: xpeem, redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov, qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov, repo: esm-xpeem-profile-collection, beamline-acronym: esm }
+          - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, qs-host: xf07id1-haxpes-qs1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection, beamline-acronym: sst }
+          - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, qs-host: xf07id1-nexafs-qs1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection, beamline-acronym: sst }
+          - { endstation: rsoxs, redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov, qs-host: xf07id1-rsoxs-qs1.nsls2.bnl.gov, repo: sst-rsoxs-profile-collection, beamline-acronym: sst }
+          - { endstation: maia, redis-host: xf04bm-maia-redis1.nsls2.bnl.gov, qs-host: xf04bm-maia-qs1.nsls2.bnl.gov, repo: xfm-maia-profile-collection, beamline-acronym: xfm }
+          - { endstation: xpdd, redis-host: xf28id2-xpdd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpdd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection-ldrd20-31, beamline-acronym: xpd }
 
     runs-on: ubuntu-latest
     steps:
@@ -81,33 +81,25 @@ jobs:
               exit 1
           fi
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
-
       - name: Endstation env vars
         shell: bash -leo pipefail {0}
         run: |
           # For single-endstation beamlines, beamline-acronym == endstation.
           # For multi-endstation beamlines, beamline-acronym is set explicitly in the matrix.
-          export BEAMLINE_ACRONYM="${{ matrix.beamline-acronym || matrix.endstation }}"
-          echo "BEAMLINE_ACRONYM=${BEAMLINE_ACRONYM}" >> $GITHUB_ENV
+          BEAMLINE_ACRONYM="${{ matrix.beamline-acronym || matrix.endstation }}"
+          BEAMLINE_ACRONYM_UPPER="${BEAMLINE_ACRONYM^^}"
 
-          export BEAMLINE_ACRONYM_UPPER="${BEAMLINE_ACRONYM^^}"
-          echo "BEAMLINE_ACRONYM_UPPER=${BEAMLINE_ACRONYM_UPPER}" >> $GITHUB_ENV
-
-          export ENDSTATION_ACRONYM="${{ matrix.endstation }}"
-          echo "ENDSTATION_ACRONYM=${ENDSTATION_ACRONYM}" >> $GITHUB_ENV
-
-          export REDIS_HOST="${{ matrix.redis-host }}"
-          echo "REDIS_HOST=${REDIS_HOST}" >> $GITHUB_ENV
-
-          echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret" >> $GITHUB_ENV
-          echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test" >> $GITHUB_ENV
-          echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test" >> $GITHUB_ENV
-          echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=localhost:9092" >> $GITHUB_ENV
-          echo "BLUESKY_KAFKA_PASSWORD=test" >> $GITHUB_ENV
+          {
+              echo "BEAMLINE_ACRONYM=${BEAMLINE_ACRONYM}"
+              echo "ENDSTATION_ACRONYM=${{ matrix.endstation }}"
+              echo "REDIS_HOST=${{ matrix.redis-host }}"
+              echo "QS_HOST=${{ matrix.qs-host }}"
+              echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret"
+              echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test"
+              echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test"
+              echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=localhost:9092"
+              echo "BLUESKY_KAFKA_PASSWORD=test"
+          } >> $GITHUB_ENV
 
       - name: Beamline directory setup
         shell: bash -leo pipefail {0}
@@ -138,31 +130,34 @@ jobs:
       - name: EPICS env vars
         shell: bash -leo pipefail {0}
         run: |
-          echo "EPICS_CA_AUTO_ADDR_LIST=NO" >> $GITHUB_ENV
-          echo "EPICS_CA_ADDR_LIST=127.0.0.1" >> $GITHUB_ENV
+          {
+              echo "EPICS_CA_AUTO_ADDR_LIST=NO"
+              echo "EPICS_CA_ADDR_LIST=127.0.0.1"
+          } >> $GITHUB_ENV
+
+      - name: Set up Python (for blackhole IOC)
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
 
       - name: Start blackhole IOC
         shell: bash -leo pipefail {0}
         run: |
+          # Runs on the setup-python interpreter so it does not depend on the
+          # profile's pixi env (which may not include caproto).
           python3 -m pip install -U caproto
           echo "\n" | python3 $GITHUB_WORKSPACE/spoof_beamline.py &
           trap 'kill -SIGINT %1; echo exiting...' EXIT
           sudo ln -svf caproto-repeater "/bin/caRepeater"
 
-      - name: Install pixi
+      - name: Install pixi and profile environment
         shell: bash -leo pipefail {0}
         run: |
           curl -fsSL https://pixi.sh/install.sh | bash
           echo "$HOME/.pixi/bin" >> $GITHUB_PATH
           export PATH="$HOME/.pixi/bin:$PATH"
           pixi --version
-
-      - name: Install pixi environment
-        shell: bash -leo pipefail {0}
-        run: |
-          cd ${CLONED_REPO}
-          export PATH="$HOME/.pixi/bin:$PATH"
-          pixi install -e ${PIXI_ENV}
+          pixi install --manifest-path ${CLONED_REPO}/pixi.toml -e ${PIXI_ENV}
 
       - name: Run beamline-specific steps
         shell: bash -leo pipefail {0}
@@ -185,7 +180,7 @@ jobs:
           tiled_profiles_dir="$HOME/.config/tiled/profiles/"
           mkdir -v -p "${tiled_profiles_dir}"
           cat << EOF > ${tiled_profiles_dir}/profiles.yml
-          ${ENDSTATION_ACRONYM:-${BEAMLINE_ACRONYM:-local}}:
+          ${ENDSTATION_ACRONYM}:
             direct:
               authentication:
                 allow_anonymous_access: true
