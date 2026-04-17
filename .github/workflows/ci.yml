@@ -4,164 +4,297 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-  workflow_call:
-    inputs:
-      version: # the variable you can use in place of a matrix
-        required: true
-        type: string
+
+env:
+  PIXI_ENV: terminal
 
 jobs:
   testing_beamline_profiles:
-    name: ${{ matrix.repos.beamline-acronym }}-${{ matrix.repos.repo }}-${{ matrix.repos.branch }}-py311
+    name: ${{ matrix.endstation }}
     strategy:
       fail-fast: false
       matrix:
-        repos:
-          - org: "NSLS-II-AMX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "amx"
-          - org: "NSLS-II-BMM"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "bmm"
-          - org: "NSLS-II-CHX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "chx"
-          # TODO: revert the CMS config once the PR is merged:
-          - org: "thomashopkins32"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "cms"
-          # - org: "NSLS-II-CMS"
-          #   repo: "profile_collection"
-          #   branch: "master"
-          #   beamline-acronym: "cms"
-          - org: "NSLS2"
-            repo: "csx-profile-collection"
-            branch: "main"
-            beamline-acronym: "csx"
-          - org: "NSLS2"
-            repo: "esm-arpes-profile-collection"
-            branch: "main"
-            beamline-acronym: "esm"
-            beamline-endstation: "arpes"
-            beamline-redis-prefix: "arpes-"
-          - org: "NSLS-II-ESM-2"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "esm"
-            beamline-endstation: "xpeem"
-            beamline-redis-prefix: "xpeem-"
-          - org: "NSLS-II-FMX"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "fmx"
-          - org: "NSLS-II-FXI"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "fxi"
-          - org: "NSLS-II-HEX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "hex"
-          - org: "NSLS-II-HXN"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "hxn"
-          - org: "NSLS-II-IOS"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "ios"
-          - org: "NSLS-II-ISR"
-            repo: "profile_D-hutch"
-            branch: "2025-2.0"
-            beamline-acronym: "isr"
-          - org: "NSLS-II-IXS"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "ixs"
-          - org: "NSLS-II-LIX"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "lix"
-          - org: "NSLS-II-NYX"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "nyx"
-          - org: "NSLS-II-PDF"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "pdf"
-          - org: "NSLS-II-QAS"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "qas"
-          - org: "NSLS-II-SIX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "six"
-          - org: "NSLS-II-SMI"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "smi"
-            beamline-redis-prefix: "swaxs-"
-          - org: "NSLS-II-SRX"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "srx"
-          - org: "NSLS-II-SST"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "sst"
-          - org: "NSLS-II-SST"
-            repo: "profile_collection_ucal"
-            branch: "2025-2.0"
-            beamline-acronym: "sst"
-          - org: "NSLS-II-SST"
-            repo: "profile_collection_haxpes"
-            branch: "2025-2.0"
-            beamline-acronym: "sst"
-          - org: "NSLS-II-TES"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "tes"
-          - org: "NSLS-II-TST"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "tst"
-          - org: "NSLS-II-XFM"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "xfm"
-          - org: "NSLS-II-XFM"
-            repo: "profile-collection-maia"
-            branch: "2025-2.0"
-            beamline-acronym: "xfm"
-          - org: "NSLS-II-XFP"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "xfp"
-          - org: "NSLS-II-XPD"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "xpd"
-          - org: "NSLS-II-XPD-tomo"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "xpdd"
+        # Each entry is an endstation with its redis hostname, queueserver hostname, and repo.
+        # For single-endstation beamlines, beamline-acronym is omitted
+        # (defaults to endstation name in the env vars step).
+        include:
+          - { endstation: amx,    redis-host: xf17id1-amx-redis1.nsls2.bnl.gov,    qs-host: xf17id1-amx-qs1.nsls2.bnl.gov,    repo: amx-profile-collection }
+          - { endstation: bmm,    redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov,     qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov,     repo: bmm-profile-collection }
+          - { endstation: cdi,    redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov,     qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov,     repo: cdi-profile-collection }
+          - { endstation: chx,    redis-host: xf11id1-chx-redis1.nsls2.bnl.gov,     qs-host: xf11id1-chx-qs1.nsls2.bnl.gov,     repo: chx-profile-collection }
+          - { endstation: cms,    redis-host: xf11bm-cms-redis1.nsls2.bnl.gov,      qs-host: xf11bm-cms-qs1.nsls2.bnl.gov,      repo: cms-profile-collection }
+          - { endstation: csx,    redis-host: xf23id1-csx-redis1.nsls2.bnl.gov,     qs-host: xf23id1-csx-qs1.nsls2.bnl.gov,     repo: csx-profile-collection }
+          - { endstation: fmx,    redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov,     qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov,     repo: fmx-profile-collection }
+          - { endstation: fxi,    redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov,     qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov,     repo: fxi-profile-collection }
+          - { endstation: hex,    redis-host: xf27id1-hex-redis1.nsls2.bnl.gov,     qs-host: xf27id1-hex-qs1.nsls2.bnl.gov,     repo: hex-profile-collection }
+          - { endstation: hxn,    redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov,     qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov,     repo: hxn-profile-collection }
+          - { endstation: ios,    redis-host: xf23id2-ios-redis1.nsls2.bnl.gov,     qs-host: xf23id2-ios-qs1.nsls2.bnl.gov,     repo: ios-profile-collection }
+          - { endstation: isr,    redis-host: xf04id1-isr-redis1.nsls2.bnl.gov,     qs-host: xf04id1-isr-qs1.nsls2.bnl.gov,     repo: isr-profile-collection }
+          - { endstation: iss,    redis-host: xf08id1-iss-redis1.nsls2.bnl.gov,     qs-host: xf08id1-iss-qs1.nsls2.bnl.gov,     repo: iss-profile-collection }
+          - { endstation: ixs,    redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov,     qs-host: xf10id1-ixs-qs1.nsls2.bnl.gov,     repo: ixs-profile-collection }
+          - { endstation: lix,    redis-host: xf16id1-lix-redis1.nsls2.bnl.gov,     qs-host: xf16id1-lix-qs1.nsls2.bnl.gov,     repo: lix-profile-collection }
+          - { endstation: nyx,    redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov,     qs-host: xf19id2-nyx-qs1.nsls2.bnl.gov,     repo: nyx-profile-collection }
+          - { endstation: opls,   redis-host: xf12id1-opls-redis1.nsls2.bnl.gov,    qs-host: xf12id1-opls-qs1.nsls2.bnl.gov,    repo: opls-profile-collection }
+          - { endstation: pdf,    redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov,     qs-host: xf28id1-pdf-qs1.nsls2.bnl.gov,     repo: pdf-profile-collection }
+          - { endstation: qas,    redis-host: xf07bm-qas-redis1.nsls2.bnl.gov,     qs-host: xf07bm-qas-qs1.nsls2.bnl.gov,     repo: qas-profile-collection }
+          - { endstation: six,    redis-host: xf02id1-six-redis1.nsls2.bnl.gov,     qs-host: xf02id1-six-qs1.nsls2.bnl.gov,     repo: six-profile-collection }
+          - { endstation: smi,    redis-host: xf12id2-smi-redis1.nsls2.bnl.gov,     qs-host: xf12id2-smi-qs1.nsls2.bnl.gov,     repo: smi-profile-collection }
+          - { endstation: srx,    redis-host: xf05id2-srx-redis1.nsls2.bnl.gov,     qs-host: xf05id2-srx-qs1.nsls2.bnl.gov,     repo: srx-profile-collection }
+          - { endstation: tes,    redis-host: xf08bm-tes-redis1.nsls2.bnl.gov,      qs-host: xf08bm-tes-qs1.nsls2.bnl.gov,      repo: tes-profile-collection }
+          - { endstation: tst,    redis-host: xf31id1-tst-redis1.nsls2.bnl.gov,     qs-host: xf31id1-tst-qs1.nsls2.bnl.gov,     repo: tst-profile-collection }
+          - { endstation: xfm,    redis-host: xf04bm-xfm-redis1.nsls2.bnl.gov,     qs-host: xf04bm-xfm-qs1.nsls2.bnl.gov,     repo: xfm-profile-collection }
+          - { endstation: xfp,    redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov,     qs-host: xf17bm-xfp-qs1.nsls2.bnl.gov,     repo: xfp-profile-collection }
+          - { endstation: xpd,    redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov,    qs-host: xf28id2-xpd-qs1.nsls2.bnl.gov,    repo: xpd-profile-collection }
+          # Multi-endstation beamlines (beamline-acronym differs from endstation)
+          - { endstation: arpes,  redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov,  qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov,  repo: esm-arpes-profile-collection,        beamline-acronym: esm }
+          - { endstation: xpeem,  redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov,  qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov,  repo: esm-xpeem-profile-collection,        beamline-acronym: esm }
+          - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, qs-host: xf07id1-haxpes-qs1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection,       beamline-acronym: sst }
+          - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, qs-host: xf07id1-nexafs-qs1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection,       beamline-acronym: sst }
+          - { endstation: rsoxs,  redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov,  qs-host: xf07id1-rsoxs-qs1.nsls2.bnl.gov,  repo: sst-rsoxs-profile-collection,        beamline-acronym: sst }
+          - { endstation: maia,   redis-host: xf04bm-maia-redis1.nsls2.bnl.gov,    qs-host: xf04bm-maia-qs1.nsls2.bnl.gov,    repo: xfm-maia-profile-collection,         beamline-acronym: xfm }
+          - { endstation: xpdd,   redis-host: xf28id2-xpdd-redis1.nsls2.bnl.gov,   qs-host: xf28id2-xpdd-qs1.nsls2.bnl.gov,   repo: xpd-profile-collection-ldrd20-31,    beamline-acronym: xpd }
 
     runs-on: ubuntu-latest
     steps:
-      - name: Run Integration Tests Against Beamline Profiles
-        uses: NSLS2/gha-beamline-integration-test@2025-1.0-test
+      - name: Checkout test harness
+        uses: actions/checkout@v4
         with:
-          conda_env_url: "https://zenodo.org/records/15171538/files/2025-2.0-py311-tiled.tar.gz"
-          conda_env_md5: "3d705483eab31648fae7cf0ce9a77e72"
-          org: "${{ matrix.repos.org }}"
-          repo: "${{ matrix.repos.repo }}"
-          branch: "${{ matrix.repos.branch }}"
-          beamline-acronym: "${{ matrix.repos.beamline-acronym }}"
-          beamline-endstation: "${{ matrix.repos.beamline-endstation }}"
-          beamline-redis-prefix: "${{ matrix.repos.beamline-redis-prefix }}"
+          persist-credentials: false
+
+      - name: Clone profile collection
+        shell: bash -leo pipefail {0}
+        run: |
+          REPO_NAME="${{ matrix.repo }}"
+          export CLONED_REPO="$HOME/${REPO_NAME}"
+          echo "CLONED_REPO=${CLONED_REPO}" >> $GITHUB_ENV
+          git clone -b main "https://github.com/NSLS2/${REPO_NAME}" ${CLONED_REPO}
+
+      - name: Check LICENSE
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ ! -f "${CLONED_REPO}/LICENSE" ]; then
+              echo "LICENSE file not found. Exiting..."
+              exit 1
+          fi
+          if ! grep -q "Brookhaven National Laboratory" "${CLONED_REPO}/LICENSE"; then
+              echo "LICENSE does not contain 'Brookhaven National Laboratory'. Exiting..."
+              exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Endstation env vars
+        shell: bash -leo pipefail {0}
+        run: |
+          # For single-endstation beamlines, beamline-acronym == endstation.
+          # For multi-endstation beamlines, beamline-acronym is set explicitly in the matrix.
+          export BEAMLINE_ACRONYM="${{ matrix.beamline-acronym || matrix.endstation }}"
+          echo "BEAMLINE_ACRONYM=${BEAMLINE_ACRONYM}" >> $GITHUB_ENV
+
+          export BEAMLINE_ACRONYM_UPPER="${BEAMLINE_ACRONYM^^}"
+          echo "BEAMLINE_ACRONYM_UPPER=${BEAMLINE_ACRONYM_UPPER}" >> $GITHUB_ENV
+
+          export ENDSTATION_ACRONYM="${{ matrix.endstation }}"
+          echo "ENDSTATION_ACRONYM=${ENDSTATION_ACRONYM}" >> $GITHUB_ENV
+
+          export REDIS_HOST="${{ matrix.redis-host }}"
+          echo "REDIS_HOST=${REDIS_HOST}" >> $GITHUB_ENV
+
+          echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret" >> $GITHUB_ENV
+          echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test" >> $GITHUB_ENV
+          echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test" >> $GITHUB_ENV
+          echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=localhost:9092" >> $GITHUB_ENV
+          echo "BLUESKY_KAFKA_PASSWORD=test" >> $GITHUB_ENV
+
+      - name: Beamline directory setup
+        shell: bash -leo pipefail {0}
+        run: |
+          sudo mkdir -v /nsls2/
+          sudo chown -v $USER: /nsls2/
+          mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/RE-metadata
+          mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}-new
+
+          export LOGS_HOME="$HOME"
+          if [ "${BEAMLINE_ACRONYM}" == "srx" ]; then
+              export LOGS_HOME="/home/xf05id1"
+              sudo mkdir -v -p /home/xf05id1/
+              sudo chown -v $USER: /home/xf05id1/
+          elif [ "${BEAMLINE_ACRONYM}" == "hxn" ]; then
+              sudo mkdir -v -p /home/xf03id/
+              sudo chown -v $USER: /home/xf03id/
+              mkdir -v -p /home/xf03id/logs/
+              touch /home/xf03id/benchmark.out
+          fi
+          echo "LOGS_HOME=${LOGS_HOME}" >> $GITHUB_ENV
+          mkdir -v -p ${LOGS_HOME}/.cache/bluesky/log/
+
+          mkdir -v -p $HOME/.ipython/
+          cp -rv "${CLONED_REPO}" $HOME/.ipython/profile_test
+          rm -fv ~/.ipython/profile_test/startup/*.py
+
+      - name: EPICS env vars
+        shell: bash -leo pipefail {0}
+        run: |
+          echo "EPICS_CA_AUTO_ADDR_LIST=NO" >> $GITHUB_ENV
+          echo "EPICS_CA_ADDR_LIST=127.0.0.1" >> $GITHUB_ENV
+
+      - name: Start blackhole IOC
+        shell: bash -leo pipefail {0}
+        run: |
+          python3 -m pip install -U caproto
+          echo "\n" | python3 $GITHUB_WORKSPACE/spoof_beamline.py &
+          trap 'kill -SIGINT %1; echo exiting...' EXIT
+          sudo ln -svf caproto-repeater "/bin/caRepeater"
+
+      - name: Install pixi
+        shell: bash -leo pipefail {0}
+        run: |
+          curl -fsSL https://pixi.sh/install.sh | bash
+          echo "$HOME/.pixi/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.pixi/bin:$PATH"
+          pixi --version
+
+      - name: Install pixi environment
+        shell: bash -leo pipefail {0}
+        run: |
+          cd ${CLONED_REPO}
+          export PATH="$HOME/.pixi/bin:$PATH"
+          pixi install -e ${PIXI_ENV}
+
+      - name: Run beamline-specific steps
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -f "${CLONED_REPO}/.ci/bl-specific.sh" ]; then
+              echo "Sourcing ${CLONED_REPO}/.ci/bl-specific.sh"
+              source "${CLONED_REPO}/.ci/bl-specific.sh"
+          fi
+
+      - name: Configure services (pyOlog, databroker, tiled, kafka)
+        shell: bash -leo pipefail {0}
+        run: |
+          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
+
+          databroker_conf_dir="$HOME/.config/databroker"
+          mkdir -v -p ${databroker_conf_dir}
+          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
+          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${BEAMLINE_ACRONYM}.yml
+
+          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
+          mkdir -v -p "${tiled_profiles_dir}"
+          cat << EOF > ${tiled_profiles_dir}/profiles.yml
+          ${ENDSTATION_ACRONYM:-${BEAMLINE_ACRONYM:-local}}:
+            direct:
+              authentication:
+                allow_anonymous_access: true
+              trees:
+              - tree: databroker.mongo_normalized:Tree.from_uri
+                path: /
+                args:
+                  uri: mongodb://localhost:27017/metadatastore-local
+                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
+          EOF
+
+          sudo mkdir -v -p /etc/bluesky/
+          cat << EOF | sudo tee /etc/bluesky/kafka.yml
+          ---
+            abort_run_on_kafka_exception: false
+            bootstrap_servers:
+              - localhost:9092
+            runengine_producer_config:
+              security.protocol: PLAINTEXT
+          EOF
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # 1.8.0
+        with:
+          redis-version: latest
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@5a87bd81f88e2a8b195f8b7b656f5cda1350815a # 1.11.0
+        with:
+          mongodb-version: '4.4'
+
+      - name: Configure DNS and seed Redis
+        shell: bash -leo pipefail {0}
+        run: |
+          # Point per-endstation redis hostname and legacy info DNS at localhost
+          echo "127.0.0.1 ${REDIS_HOST}" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 info.${BEAMLINE_ACRONYM}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          for i in {1..3}; do
+              echo "127.0.0.1 mongo${i}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          done
+
+          sudo apt-get install -y -qq redis-tools
+          redis-cli -h ${REDIS_HOST} set "cycle" "\"2025-2\""
+          redis-cli -h ${REDIS_HOST} set "data_session" "\"pass-000000\""
+
+      - name: Start Tiled and create profiles
+        shell: bash -leo pipefail {0}
+        run: |
+          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${PIXI_ENV})"
+
+          tiled profile create --name nsls2 http://127.0.0.1:8000
+
+          export TILED_API_KEY=secret
+          echo "TILED_API_KEY=${TILED_API_KEY}" >> $GITHUB_ENV
+          nohup tiled serve catalog --temp --api-key=$TILED_API_KEY > /tmp/tiled.log 2>&1 &
+          sleep 10
+
+          python3 -c "
+          import os
+          from tiled.client import from_profile
+          tla = os.getenv('BEAMLINE_ACRONYM', 'xyz').lower()
+          TLA = tla.upper()
+          client = from_profile('nsls2', api_key=os.getenv(f'TILED_BLUESKY_WRITING_API_KEY_{TLA}', 'secret'))
+          client.create_container(tla).create_container('raw', specs=['CatalogOfBluesklyRuns'])
+          print(client[tla]['raw'])"
+
+      - name: Apply auto settings
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -f "${CLONED_REPO}/.ci/auto_settings.sav" ]; then
+            while IFS= read -r line; do
+              if [ -n "$line" ]; then
+                  caproto-put $line
+              fi
+            done < "${CLONED_REPO}/.ci/auto_settings.sav"
+          fi
+
+      - name: Run profile startup tests
+        shell: bash -leo pipefail {0}
+        run: |
+          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${PIXI_ENV})"
+          cd "${CLONED_REPO}"
+
+          /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
+          export DISPLAY=:99
+
+          command="
+          import os, glob
+          ip = get_ipython()
+          startup_files = sorted(glob.glob(os.path.join(os.getcwd(), 'startup/*.py')))
+          if os.path.isfile('.ci/drop-in.py'):
+              startup_files.append('.ci/drop-in.py')
+          if not startup_files:
+              raise SystemExit(f'Cannot find any startup files in {os.getcwd()}')
+          for f in startup_files:
+              if not os.path.isfile(f):
+                  raise FileNotFoundError(f'File {f} cannot be found.')
+              print(f'Executing {f} in CI')
+              ip.parent._exec_file(f)"
+          env | grep EPICS
+          ipython --profile=test -c "$command"
+
+      - name: Show logs
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          echo "=== Tiled server ==="
+          cat /tmp/tiled.log || true
+          echo "=== Bluesky ==="
+          cat ${LOGS_HOME}/.cache/bluesky/log/bluesky.log || true
+          echo "=== Bluesky IPython ==="
+          cat ${LOGS_HOME}/.cache/bluesky/log/bluesky_ipython.log || true
