@@ -5,15 +5,49 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  PIXI_ENV: terminal
-
 jobs:
   testing_beamline_profiles:
-    name: ${{ matrix.endstation }}
+    name: ${{ matrix.endstation }} (${{ matrix.pixi-env }})
     strategy:
       fail-fast: false
       matrix:
+        pixi-env: [terminal, qs]
+        endstation:
+          - amx
+          - bmm
+          - cdi
+          - chx
+          - cms
+          - csx
+          - fmx
+          - fxi
+          - hex
+          - hxn
+          - ios
+          - isr
+          - iss
+          - ixs
+          - lix
+          - nyx
+          - opls
+          - pdf
+          - qas
+          - six
+          - smi
+          - srx
+          - tes
+          - tst
+          - xfm
+          - xfp
+          - xpd
+          - arpes
+          - xpeem
+          - haxpes
+          - nexafs
+          - rsoxs
+          - vppem
+          - maia
+          - xpdd
         # Each entry is an endstation with its redis hostname, queueserver hostname, and repo.
         # For single-endstation beamlines, beamline-acronym is omitted
         # (defaults to endstation name in the env vars step).
@@ -160,14 +194,16 @@ jobs:
           echo "BLACKHOLE_IOC_PID=${IOC_PID}" >> $GITHUB_ENV
           sudo ln -svf caproto-repeater "/bin/caRepeater"
 
-      - name: Install pixi and profile environment
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.8.8
+        with:
+          pixi-version: v0.67.1
+
+      - name: Install pixi profile environment
         shell: bash -leo pipefail {0}
         run: |
-          curl -fsSL https://pixi.sh/install.sh | bash
-          echo "$HOME/.pixi/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.pixi/bin:$PATH"
           pixi --version
-          pixi install --manifest-path ${CLONED_REPO}/pixi.toml -e ${PIXI_ENV}
+          pixi install --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }}
 
       - name: Run beamline-specific steps
         shell: bash -leo pipefail {0}
@@ -180,11 +216,11 @@ jobs:
       - name: Configure services (pyOlog, databroker, tiled, kafka)
         shell: bash -leo pipefail {0}
         run: |
-          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
+          cp -v "$GITHUB_WORKSPACE/configs/pyOlog.conf" "$HOME/.pyOlog.conf"
 
           databroker_conf_dir="$HOME/.config/databroker"
           mkdir -v -p ${databroker_conf_dir}
-          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
+          cp -v "$GITHUB_WORKSPACE/configs/databroker.yml" "${databroker_conf_dir}/_legacy_config.yml"
           cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${BEAMLINE_ACRONYM}.yml
 
           tiled_profiles_dir="$HOME/.config/tiled/profiles/"
@@ -215,7 +251,7 @@ jobs:
       - name: Start Redis
         uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # 1.8.0
         with:
-          redis-version: latest
+          redis-version: '6'
 
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@5a87bd81f88e2a8b195f8b7b656f5cda1350815a # 1.11.0
@@ -239,7 +275,7 @@ jobs:
       - name: Start Tiled and create profiles
         shell: bash -leo pipefail {0}
         run: |
-          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${PIXI_ENV})"
+          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
 
           tiled profile create --name nsls2 http://127.0.0.1:8000
 
@@ -254,7 +290,7 @@ jobs:
           tla = os.getenv('BEAMLINE_ACRONYM', 'xyz').lower()
           TLA = tla.upper()
           client = from_profile('nsls2', api_key=os.getenv(f'TILED_BLUESKY_WRITING_API_KEY_{TLA}', 'secret'))
-          client.create_container(tla).create_container('raw', specs=['CatalogOfBluesklyRuns'])
+          client.create_container(tla).create_container('raw', specs=['CatalogOfBlueskyRuns'])
           print(client[tla]['raw'])"
 
       - name: Apply auto settings
@@ -271,40 +307,82 @@ jobs:
       - name: Run profile startup tests
         shell: bash -leo pipefail {0}
         run: |
-          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${PIXI_ENV})"
-          cd "${CLONED_REPO}"
+          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
 
-          /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
-          export DISPLAY=:99
+          if [ "${{ matrix.pixi-env }}" = "terminal" ]; then
+            cd "${CLONED_REPO}"
 
-          command="
-          import os, glob
-          ip = get_ipython()
-          startup_files = sorted(glob.glob(os.path.join(os.getcwd(), 'startup/*.py')))
-          if os.path.isfile('.ci/drop-in.py'):
+            /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
+            export DISPLAY=:99
+
+            command="
+            import os, glob
+            ip = get_ipython()
+            startup_files = sorted(glob.glob(os.path.join(os.getcwd(), 'startup/*.py')))
+            if os.path.isfile('.ci/drop-in.py'):
               startup_files.append('.ci/drop-in.py')
-          if not startup_files:
+            if not startup_files:
               raise SystemExit(f'Cannot find any startup files in {os.getcwd()}')
-          for f in startup_files:
+            for f in startup_files:
               if not os.path.isfile(f):
-                  raise FileNotFoundError(f'File {f} cannot be found.')
+                raise FileNotFoundError(f'File {f} cannot be found.')
               print(f'Executing {f} in CI')
               ip.parent._exec_file(f)"
-          env | grep EPICS
-          ipython --profile=test -c "$command"
+            env | grep EPICS
+            ipython --profile=test -c "$command"
+          else
+            cd "${CLONED_REPO}"
+            nohup start-re-manager --profile-dir=. < /dev/null > /tmp/qs_manager.log 2>&1 &
+            QS_MANAGER_PID=$!
+            disown
+            echo "QS_MANAGER_PID=${QS_MANAGER_PID}" >> $GITHUB_ENV
+
+            QS_READY=0
+            for i in {1..60}; do
+              if grep -qF "ZeroMQ server is waiting on" /tmp/qs_manager.log; then
+                QS_READY=1
+                break
+              fi
+              sleep 1
+            done
+
+            if [ "${QS_READY}" -ne 1 ]; then
+              echo "start-re-manager did not become ready within 60 seconds"
+              cat /tmp/qs_manager.log || true
+              kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
+              wait "${QS_MANAGER_PID}" 2>/dev/null || true
+              exit 1
+            fi
+
+            kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
+            wait "${QS_MANAGER_PID}" 2>/dev/null || true
+          fi
 
       - name: Show logs
         if: always()
         shell: bash -leo pipefail {0}
         run: |
-          echo "=== Blackhole IOC ==="
-          cat /tmp/blackhole_ioc.log || true
-          echo "=== Tiled server ==="
-          cat /tmp/tiled.log || true
-          echo "=== Bluesky ==="
-          cat ${LOGS_HOME}/.cache/bluesky/log/bluesky.log || true
-          echo "=== Bluesky IPython ==="
-          cat ${LOGS_HOME}/.cache/bluesky/log/bluesky_ipython.log || true
+          show_log() {
+              echo "=== $1 ==="
+              if [ -f "$2" ]; then
+                  cat "$2"
+              else
+                  echo "(not produced)"
+              fi
+          }
+          show_log "Blackhole IOC" /tmp/blackhole_ioc.log
+          show_log "Tiled server" /tmp/tiled.log
+          show_log "QS manager" /tmp/qs_manager.log
+          show_log "Bluesky" "${LOGS_HOME}/.cache/bluesky/log/bluesky.log"
+          show_log "Bluesky IPython" "${LOGS_HOME}/.cache/bluesky/log/bluesky_ipython.log"
+
+      - name: Stop QS manager
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${QS_MANAGER_PID:-}" ]; then
+              kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
+          fi
 
       - name: Stop blackhole IOC
         if: always()
