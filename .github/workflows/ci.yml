@@ -195,7 +195,9 @@ jobs:
           IOC_PID=$!
           disown
           echo "BLACKHOLE_IOC_PID=${IOC_PID}" >> $GITHUB_ENV
-          sudo ln -svf caproto-repeater "/bin/caRepeater"
+          caproto_repeater_path="$(command -v caproto-repeater)"
+          test -n "$caproto_repeater_path"
+          sudo ln -svf "$caproto_repeater_path" "/bin/caRepeater"
 
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@v0.8.8
