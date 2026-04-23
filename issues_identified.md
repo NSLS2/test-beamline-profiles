@@ -87,7 +87,20 @@ When details are incomplete, entries are marked as provisional until logs are re
   - Update isstools dependency or submit PR to fix typo in batch.py line 19.
   - Change `.get()s` to `.values` or appropriate method.
 - Owner: iss-profile-collection maintainers (or isstools maintainers).
+### LIX
 
+- Status: Confirmed profile issue (conda channel configuration).
+- Symptom: pixi install failed with invalid conda channel.
+- Error signature:
+  - UnavailableInvalidChannel: HTTP 404 Not Found for channel globus-sdk
+  - `The channel is not accessible or is invalid.`
+- Cause:
+  - Profile has `globus-sdk` configured as a conda channel in pixi.toml, but this channel is not accessible at https://conda.anaconda.org/globus-sdk.
+  - Channel may be misspelled, deprecated, or requires authentication.
+- Suggested fix:
+  - Remove or correct the `globus-sdk` channel reference in pixi.toml.
+  - If globus-sdk packages are needed, verify the correct channel URL or use conda-forge alternative.
+- Owner: lix-profile-collection maintainers.
 ## Provisional Profile Collection Issues (Need Log Refresh for Full Error Detail)
 
 ### CDI
