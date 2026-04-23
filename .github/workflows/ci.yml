@@ -127,14 +127,14 @@ jobs:
         run: |
           # For single-endstation beamlines, beamline-acronym == endstation.
           # For multi-endstation beamlines, beamline-acronym is set explicitly in the matrix.
-          BEAMLINE_ACRONYM="${{ matrix.beamline-acronym || matrix.endstation }}"
+          BEAMLINE_ACRONYM="${{ matrix['beamline-acronym'] || matrix.endstation }}"
           BEAMLINE_ACRONYM_UPPER="${BEAMLINE_ACRONYM^^}"
 
           {
               echo "BEAMLINE_ACRONYM=${BEAMLINE_ACRONYM}"
               echo "ENDSTATION_ACRONYM=${{ matrix.endstation }}"
-              echo "REDIS_HOST=${{ matrix.redis-host }}"
-              echo "QS_HOST=${{ matrix.qs-host }}"
+              echo "REDIS_HOST=${{ matrix['redis-host'] }}"
+              echo "QS_HOST=${{ matrix['qs-host'] }}"
               echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret"
               echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test"
               echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test"
