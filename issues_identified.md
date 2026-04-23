@@ -73,6 +73,21 @@ When details are incomplete, entries are marked as provisional until logs are re
   - Ensure RUNNING_IN_NSLS2_CI (or equivalent) correctly bypasses real PVA device connection in startup.
 - Owner: hex-profile-collection maintainers.
 
+### ISS
+
+- Status: Confirmed profile issue (upstream dependency).
+- Symptom: Startup failed during Python compilation of isstools package.
+- Error signature:
+  - SyntaxError: invalid syntax in /usr/share/miniconda/lib/python3.13/site-packages/isstools/batch/batch.py line 19
+  - `if tables[name][[column]].isnull().get()s.all():` (note the `.get()s` typo)
+- Cause:
+  - isstools package has a syntax error (typo: `.get()s` should be `.get_values()` or `.values`).
+  - Likely Python 3.13 compatibility issue or undetected typo in upstream isstools.
+- Suggested fix:
+  - Update isstools dependency or submit PR to fix typo in batch.py line 19.
+  - Change `.get()s` to `.values` or appropriate method.
+- Owner: iss-profile-collection maintainers (or isstools maintainers).
+
 ## Provisional Profile Collection Issues (Need Log Refresh for Full Error Detail)
 
 ### CDI
