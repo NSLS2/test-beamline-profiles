@@ -117,6 +117,22 @@ When details are incomplete, entries are marked as provisional until logs are re
   - Alternatively, ensure all `.ci/*.sh` scripts use LF line endings in git attributes.
 - Owner: sst-rsoxs-profile-collection maintainers (or broader SST multi-endstation issue).
 
+### MAIA
+
+- Status: Confirmed profile issue (tiled profile name mismatch).
+- Symptom: Startup failed in startup/00-base.py during nslsii.configure_base() call.
+- Error signature:
+  - ProfileNotFound: "Profile 'xfm' not found. Found profiles ['nsls2', 'maia']..."
+- Cause:
+  - Startup script calls `nslsii.configure_base(..., 'xfm', ...)` but CI creates a tiled profile named `'maia'` (endstation name).
+  - Mismatch between beamline acronym ('xfm') used in startup and endstation name ('maia') used in profile registration.
+  - For multi-endstation beamlines, the tiled profile name should match what configure_base() expects (beamline acronym in this case).
+- Suggested fix:
+  - Either: rename the tiled profile from 'maia' to 'xfm' in the profile configuration.
+  - Or: update startup script to use 'maia' instead of 'xfm' when calling configure_base (but this would break multi-endstation structure).
+  - Recommended: update CI harness or profile to ensure tiled profile is created with correct name for multi-endstation beamlines.
+- Owner: xfm-maia-profile-collection maintainers.
+
 ## Provisional Profile Collection Issues (Need Log Refresh for Full Error Detail)
 
 ### CDI
