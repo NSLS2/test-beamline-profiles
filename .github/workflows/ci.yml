@@ -285,17 +285,21 @@ jobs:
             -e KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1 \
             apache/kafka:3.9.0
 
+          ready=0
           for i in {1..60}; do
             if docker exec kafka /opt/kafka/bin/kafka-broker-api-versions.sh \
                 --bootstrap-server localhost:9092 >/dev/null 2>&1; then
-              echo "Kafka broker is ready"
-              exit 0
+              ready=1
+              break
             fi
             sleep 1
           done
-          echo "Kafka did not become ready within 60 seconds"
-          docker logs kafka || true
-          exit 1
+          if [ "$ready" -ne 1 ]; then
+            echo "Kafka did not become ready within 60 seconds"
+            docker logs kafka || true
+            exit 1
+          fi
+          echo "Kafka broker is ready"
 
       - name: Configure DNS and seed Redis
         shell: bash -leo pipefail {0}
@@ -303,6 +307,7 @@ jobs:
           # Point per-endstation redis hostname and legacy info DNS at localhost
           echo "127.0.0.1 ${REDIS_HOST}" | sudo tee -a /etc/hosts
           echo "127.0.0.1 info.${BEAMLINE_ACRONYM}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 tiled.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           for i in {1..3}; do
               echo "127.0.0.1 mongo${i}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           done
@@ -316,12 +321,51 @@ jobs:
         run: |
           eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
 
-          tiled profile create --name nsls2 http://127.0.0.1:8000
+          # Use the same API key profiles export for writes so hardcoded-key
+          # calls can authenticate against this mock Tiled server.
+          TILED_SERVER_API_KEY_VAR="TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}"
+          TILED_SERVER_API_KEY="${!TILED_SERVER_API_KEY_VAR:-secret}"
+          echo "TILED_API_KEY=${TILED_SERVER_API_KEY}" >> $GITHUB_ENV
 
-          export TILED_API_KEY=secret
-          echo "TILED_API_KEY=${TILED_API_KEY}" >> $GITHUB_ENV
-          nohup tiled serve catalog --temp --api-key=$TILED_API_KEY > /tmp/tiled.log 2>&1 &
-          sleep 10
+          # Generate a short-lived cert for tiled.nsls2.bnl.gov and trust it for
+          # client calls made by profiles in this job.
+          openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes \
+          -keyout /tmp/tiled.key \
+          -out /tmp/tiled.crt \
+          -subj "/CN=tiled.nsls2.bnl.gov" \
+          -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,IP:127.0.0.1"
+          {
+            echo "SSL_CERT_FILE=/tmp/tiled.crt"
+            echo "REQUESTS_CA_BUNDLE=/tmp/tiled.crt"
+          } >> $GITHUB_ENV
+          export SSL_CERT_FILE=/tmp/tiled.crt
+          export REQUESTS_CA_BUNDLE=/tmp/tiled.crt
+
+          TILED_BIN="$(command -v tiled)"
+          nohup sudo -E "$TILED_BIN" serve catalog --temp \
+            --host 127.0.0.1 \
+            --port 443 \
+            --ssl-certfile /tmp/tiled.crt \
+            --ssl-keyfile /tmp/tiled.key \
+            --api-key "${TILED_SERVER_API_KEY}" > /tmp/tiled.log 2>&1 &
+          TILED_PID=$!
+          disown
+          echo "TILED_PID=${TILED_PID}" >> $GITHUB_ENV
+
+          for i in {1..60}; do
+            if curl --silent --show-error --fail --cacert /tmp/tiled.crt \
+              https://tiled.nsls2.bnl.gov/api/v1/metadata >/dev/null 2>&1; then
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Tiled did not become ready within 60 seconds"
+              cat /tmp/tiled.log || true
+              exit 1
+            fi
+            sleep 1
+          done
+
+          tiled profile create --name nsls2 https://tiled.nsls2.bnl.gov
 
           python3 -c "
           import os
@@ -413,6 +457,15 @@ jobs:
           if [ -n "${QS_MANAGER_PID:-}" ]; then
               kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
           fi
+
+      - name: Stop Tiled server
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${TILED_PID:-}" ]; then
+            kill -SIGINT "${TILED_PID}" 2>/dev/null || true
+          fi
+          sudo pkill -SIGINT -f "tiled serve catalog --temp" 2>/dev/null || true
 
       - name: Stop blackhole IOC
         if: always()
