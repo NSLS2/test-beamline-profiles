@@ -200,6 +200,9 @@ jobs:
           test -n "$caproto_repeater_path"
           sudo ln -svf "$caproto_repeater_path" "/bin/caRepeater"
 
+      # NOTE: pixi v0.56.0 is the last version supporting [project] in pixi.toml.
+      # v0.67.1+ removed [project] support. If this is upgraded beyond v0.56.0,
+      # all profile-collection pixi.toml files must replace [project] with [workspace].
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@19eac09b398e3d0c747adc7921926a6d802df4da # v0.8.8
         with:
