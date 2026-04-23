@@ -324,6 +324,13 @@ jobs:
           redis-cli -h ${REDIS_HOST} set "cycle" "\"2025-2\""
           redis-cli -h ${REDIS_HOST} set "data_session" "\"pass-000000\""
 
+          # Create Redis secret file for profiles that require it with redis_ssl=True.
+          # Our local Redis has no auth, but nslsii.configure_base() still tries to read
+          # the secret file if redis_ssl is enabled. Use empty password for local/test.
+          sudo mkdir -p /etc/bluesky
+          echo "" | sudo tee /etc/bluesky/redis.secret
+          sudo chmod 644 /etc/bluesky/redis.secret
+
       - name: Start Tiled and create profiles
         shell: bash -leo pipefail {0}
         run: |
