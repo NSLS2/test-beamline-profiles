@@ -198,6 +198,8 @@ jobs:
         uses: prefix-dev/setup-pixi@v0.8.8
         with:
           pixi-version: v0.67.1
+          run-install: false
+          cache: false
 
       - name: Install pixi profile environment
         shell: bash -leo pipefail {0}
@@ -308,10 +310,9 @@ jobs:
         shell: bash -leo pipefail {0}
         run: |
           eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
+          cd "${CLONED_REPO}"
 
           if [ "${{ matrix.pixi-env }}" = "terminal" ]; then
-            cd "${CLONED_REPO}"
-
             /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
             export DISPLAY=:99
 
@@ -331,31 +332,21 @@ jobs:
             env | grep EPICS
             ipython --profile=test -c "$command"
           else
-            cd "${CLONED_REPO}"
             nohup start-re-manager --profile-dir=. < /dev/null > /tmp/qs_manager.log 2>&1 &
             QS_MANAGER_PID=$!
             disown
             echo "QS_MANAGER_PID=${QS_MANAGER_PID}" >> $GITHUB_ENV
 
-            QS_READY=0
             for i in {1..60}; do
               if grep -qF "ZeroMQ server is waiting on" /tmp/qs_manager.log; then
-                QS_READY=1
-                break
+                exit 0
               fi
               sleep 1
             done
 
-            if [ "${QS_READY}" -ne 1 ]; then
-              echo "start-re-manager did not become ready within 60 seconds"
-              cat /tmp/qs_manager.log || true
-              kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
-              wait "${QS_MANAGER_PID}" 2>/dev/null || true
-              exit 1
-            fi
-
+            echo "start-re-manager did not become ready within 60 seconds"
             kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
-            wait "${QS_MANAGER_PID}" 2>/dev/null || true
+            exit 1
           fi
 
       - name: Show logs
