@@ -82,8 +82,8 @@ jobs:
           - { endstation: xfp, redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov, qs-host: xf17bm-xfp-qs1.nsls2.bnl.gov, repo: xfp-profile-collection, branch: pixi_2026C2 }
           - { endstation: xpd, redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection, branch: pixi_2026C2 }
           # Multi-endstation beamlines (beamline-acronym differs from endstation)
-          - { endstation: arpes, redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov, qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov, repo: esm-arpes-profile-collection, beamline-acronym: esm, branch: pixi_2026C2 }
-          - { endstation: xpeem, redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov, qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov, repo: esm-xpeem-profile-collection, beamline-acronym: esm, branch: pixi_2026C2 }
+          - { endstation: arpes, redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov, qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov, repo: esm-arpes-profile-collection, beamline-acronym: esm, branch: main}
+          - { endstation: xpeem, redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov, qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov, repo: esm-xpeem-profile-collection, beamline-acronym: esm, branch: main }
           - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, qs-host: xf07id1-haxpes-qs1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection, beamline-acronym: sst, branch: main }
           - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, qs-host: xf07id1-nexafs-qs1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
           - { endstation: rsoxs, redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov, qs-host: xf07id1-rsoxs-qs1.nsls2.bnl.gov, repo: sst-rsoxs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
