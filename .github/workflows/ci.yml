@@ -342,7 +342,6 @@ jobs:
             -addext "subjectAltName=DNS:${REDIS_HOST},IP:127.0.0.1"
 
           sudo tee /etc/stunnel/stunnel.conf > /dev/null << 'EOF'
-          foreground = yes
           cert = /tmp/redis.crt
           key = /tmp/redis.key
 
