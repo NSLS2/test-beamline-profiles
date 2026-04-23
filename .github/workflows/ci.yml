@@ -321,7 +321,7 @@ jobs:
               echo "127.0.0.1 mongo${i}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           done
 
-          sudo apt-get install -y -qq redis-tools
+          sudo apt-get install -y -qq redis-tools stunnel4
           redis-cli -h ${REDIS_HOST} set "cycle" "\"2025-2\""
           redis-cli -h ${REDIS_HOST} set "data_session" "\"pass-000000\""
 
@@ -331,6 +331,28 @@ jobs:
           sudo mkdir -p /etc/bluesky
           echo "" | sudo tee /etc/bluesky/redis.secret
           sudo chmod 644 /etc/bluesky/redis.secret
+
+          # Use stunnel to wrap Redis with TLS. Profiles that enable redis_ssl=True
+          # expect to connect on port 6380. Generate a self-signed cert for the Redis
+          # hostname and run stunnel to terminate TLS on 6380, forwarding to :6379.
+          openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes \
+            -keyout /tmp/redis.key \
+            -out /tmp/redis.crt \
+            -subj "/CN=redis" \
+            -addext "subjectAltName=DNS:${REDIS_HOST},IP:127.0.0.1"
+
+          sudo tee /etc/stunnel/stunnel.conf > /dev/null << 'EOF'
+          foreground = yes
+          cert = /tmp/redis.crt
+          key = /tmp/redis.key
+
+          [redis]
+          accept = 127.0.0.1:6380
+          connect = 127.0.0.1:6379
+          EOF
+
+          sudo service stunnel4 restart
+          sleep 1
 
       - name: Start Tiled and create profiles
         shell: bash -leo pipefail {0}
@@ -388,12 +410,15 @@ jobs:
             -out /tmp/tiled.crt \
             -subj "/CN=tiled.nsls2.bnl.gov" \
             -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,DNS:api.nsls2.bnl.gov,IP:127.0.0.1"
+
+          # Combine Tiled and Redis certs so all TLS clients (Tiled, redis-py) can verify.
+          cat /tmp/redis.crt /tmp/tiled.crt > /tmp/certs.pem
           {
-            echo "SSL_CERT_FILE=/tmp/tiled.crt"
-            echo "REQUESTS_CA_BUNDLE=/tmp/tiled.crt"
+            echo "SSL_CERT_FILE=/tmp/certs.pem"
+            echo "REQUESTS_CA_BUNDLE=/tmp/certs.pem"
           } >> $GITHUB_ENV
-          export SSL_CERT_FILE=/tmp/tiled.crt
-          export REQUESTS_CA_BUNDLE=/tmp/tiled.crt
+          export SSL_CERT_FILE=/tmp/certs.pem
+          export REQUESTS_CA_BUNDLE=/tmp/certs.pem
 
           # Start tiled on a high port (8000) without TLS.
           TILED_BIN="$(command -v tiled)"
@@ -616,6 +641,13 @@ jobs:
             kill -SIGINT "${MOCK_API_PID}" 2>/dev/null || true
           fi
           sudo pkill -f "python3.*MockAPI" 2>/dev/null || true
+
+      - name: Stop stunnel (Redis TLS proxy)
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          sudo service stunnel4 stop 2>/dev/null || true
+          sudo pkill -f stunnel 2>/dev/null || true
 
       - name: Stop blackhole IOC
         if: always()
