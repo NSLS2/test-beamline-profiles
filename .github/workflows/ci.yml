@@ -145,7 +145,7 @@ jobs:
       - name: Beamline directory setup
         shell: bash -leo pipefail {0}
         run: |
-          sudo mkdir -v /nsls2/
+          sudo mkdir -v -p /nsls2/
           sudo chown -v $USER: /nsls2/
           mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/RE-metadata
           mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}-new
