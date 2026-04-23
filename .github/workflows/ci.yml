@@ -504,7 +504,7 @@ jobs:
             export DISPLAY=:99
 
             command="
-            import os, glob
+            import os, glob, sys, traceback
             ip = get_ipython()
             startup_files = sorted(glob.glob(os.path.join(os.getcwd(), 'startup/*.py')))
             if os.path.isfile('.ci/drop-in.py'):
@@ -515,7 +515,12 @@ jobs:
               if not os.path.isfile(f):
                 raise FileNotFoundError(f'File {f} cannot be found.')
               print(f'Executing {f} in CI')
-              ip.parent._exec_file(f)"
+              try:
+                ip.parent._exec_file(f)
+              except Exception as e:
+                print(f'ERROR in {f}:')
+                traceback.print_exc()
+                raise"
             env | grep EPICS
             ipython --profile=test -c "$command"
           else
