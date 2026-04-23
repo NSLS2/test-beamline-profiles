@@ -73,7 +73,7 @@ jobs:
           - { endstation: opls, redis-host: xf12id1-opls-redis1.nsls2.bnl.gov, repo: opls-profile-collection, branch: pixi_2026C2 }
           - { endstation: pdf, redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov, repo: pdf-profile-collection, branch: pixi_2026C2 }
           - { endstation: qas, redis-host: xf07bm-qas-redis1.nsls2.bnl.gov, repo: qas-profile-collection, branch: pixi_2026C2 }
-          - { endstation: six, redis-host: xf02id1-six-redis1.nsls2.bnl.gov, repo: six-profile-collection, branch: pixi_2026C2 }
+          - { endstation: six, redis-host: xf02id1-six-redis1.nsls2.bnl.gov, repo: six-profile-collection, branch: main }
           - { endstation: smi, redis-host: xf12id2-smi-redis1.nsls2.bnl.gov, repo: smi-profile-collection, branch: main }
           - { endstation: srx, redis-host: xf05id2-srx-redis1.nsls2.bnl.gov, repo: srx-profile-collection, branch: pixi_2026C2 }
           - { endstation: tes, redis-host: xf08bm-tes-redis1.nsls2.bnl.gov, repo: tes-profile-collection, branch: pixi_2026C2 }
