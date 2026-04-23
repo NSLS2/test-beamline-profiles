@@ -136,6 +136,7 @@ jobs:
               echo "REDIS_HOST=${{ matrix['redis-host'] }}"
               echo "QS_HOST=${{ matrix['qs-host'] }}"
               echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret"
+              echo "TILED_BLUESKY_WRITING_API_KEY=secret"
               echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test"
               echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test"
               echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092"
