@@ -20,8 +20,6 @@ PLUGIN_TYPE_PVS = [
     (re.compile('Nexus\\d:'), 'NDPluginNexus'),
     (re.compile('HDF\\d:'), 'NDFileHDF5'),
     (re.compile('Magick\\d:'), 'NDFileMagick'),
-    (re.compile('TIFF\\d:'), 'NDFileTIFF'),
-    (re.compile('HDF\\d:'), 'NDFileHDF5'),
     (re.compile('Current\\d:'), 'NDPluginStats'),
     (re.compile('SumAll'), 'NDPluginStats'),
 ]
