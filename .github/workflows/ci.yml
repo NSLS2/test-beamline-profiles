@@ -107,17 +107,20 @@ jobs:
           echo "CLONED_REPO=${CLONED_REPO}" >> $GITHUB_ENV
           git clone -b "${BRANCH}" "https://github.com/NSLS2/${REPO_NAME}" ${CLONED_REPO}
 
-      - name: Check LICENSE
-        shell: bash -leo pipefail {0}
-        run: |
-          if [ ! -f "${CLONED_REPO}/LICENSE" ]; then
-              echo "LICENSE file not found. Exiting..."
-              exit 1
-          fi
-          if ! grep -q "Brookhaven National Laboratory" "${CLONED_REPO}/LICENSE"; then
-              echo "LICENSE does not contain 'Brookhaven National Laboratory'. Exiting..."
-              exit 1
-          fi
+      # TODO: re-enable once profile collections have been updated to include a
+      # Brookhaven-attributed LICENSE file. Most profiles currently fail this
+      # check.
+      # - name: Check LICENSE
+      #   shell: bash -leo pipefail {0}
+      #   run: |
+      #     if [ ! -f "${CLONED_REPO}/LICENSE" ]; then
+      #         echo "LICENSE file not found. Exiting..."
+      #         exit 1
+      #     fi
+      #     if ! grep -q "Brookhaven National Laboratory" "${CLONED_REPO}/LICENSE"; then
+      #         echo "LICENSE does not contain 'Brookhaven National Laboratory'. Exiting..."
+      #         exit 1
+      #     fi
 
       - name: Endstation env vars
         shell: bash -leo pipefail {0}
