@@ -218,6 +218,10 @@ jobs:
           if [ -f "${CLONED_REPO}/.ci/bl-specific.sh" ]; then
               # Activate the profile's pixi env so the script inherits its PATH/env.
               eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
+              # Non-interactive CI shells need the conda hook for `conda activate`.
+              if command -v conda >/dev/null 2>&1; then
+                  eval "$(conda shell.bash hook)"
+              fi
               echo "Sourcing ${CLONED_REPO}/.ci/bl-specific.sh"
               source "${CLONED_REPO}/.ci/bl-specific.sh"
           fi
@@ -360,6 +364,9 @@ jobs:
           sudo setcap cap_net_bind_service=+ep "$(command -v caddy)"
 
           cat > /tmp/Caddyfile << 'CADDYFILE'
+          {
+            admin off
+          }
           https://tiled.nsls2.bnl.gov {
             tls /tmp/tiled.crt /tmp/tiled.key
             reverse_proxy 127.0.0.1:8000
