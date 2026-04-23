@@ -153,8 +153,16 @@ When details are incomplete, entries are marked as provisional until logs are re
 
 ### CDI
 
-- Status: Provisionally categorized as profile issue based on prior triage.
-- Detail level: Specific traceback not currently captured in this tracker.
+- Status: Confirmed profile issue (invalid conda environment reference).
+- Symptom: `.ci/bl-specific.sh` execution failed with conda environment error.
+- Error signature:
+  - `EnvironmentLocationNotFound: Not a conda environment: /home/runner/env`
+- Cause:
+  - `.ci/bl-specific.sh` script attempts to activate or reference a conda environment at `/home/runner/env` which doesn't exist or is invalid.
+  - May be hardcoded path or incorrect environment variable reference.
+- Suggested fix:
+  - Review `.ci/bl-specific.sh` and correct the environment path reference.
+  - Use environment variables or proper pixi environment activation instead of hardcoded paths.
 - Owner: cdi-profile-collection maintainers.
 
 ### CHX
