@@ -472,15 +472,18 @@ jobs:
             exit 1
           fi
 
-          # Write the nsls2 profile ourselves so it carries the api_key; `tiled
-          # profile create` doesn't expose an api-key option, and profiles like
-          # cms call `from_profile("nsls2", username=None)` which otherwise
-          # attempts anonymous access and fails against our key-protected mock.
+          # Write the nsls2 profile ourselves so it carries the api_key via a
+          # preset Authorization header; `tiled profile create` has no api-key
+          # option, and profiles like cms call `from_profile("nsls2", username=None)`
+          # which otherwise tries anonymous access and fails against our
+          # key-protected mock. `api_key` is not an allowed top-level field in
+          # the profile schema, but `headers` is.
           mkdir -p "$HOME/.config/tiled/profiles"
           cat > "$HOME/.config/tiled/profiles/nsls2.yml" <<EOF
           nsls2:
             uri: https://tiled.nsls2.bnl.gov
-            api_key: ${TILED_SERVER_API_KEY}
+            headers:
+              Authorization: "Apikey ${TILED_SERVER_API_KEY}"
           EOF
 
           python3 -c "
