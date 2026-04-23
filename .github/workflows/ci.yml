@@ -21,11 +21,11 @@ jobs:
           # - csx
           - fmx
           # - fxi
-          - hex
-          - hxn
-          # - ios
-          # - isr
-          # - iss
+          # - hex
+          # - hxn
+          - ios
+          - isr
+          - iss
           # - ixs
           # - lix
           # - nyx
@@ -62,11 +62,11 @@ jobs:
           # - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, qs-host: xf23id1-csx-qs1.nsls2.bnl.gov, repo: csx-profile-collection, branch: main }
           - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov, repo: fmx-profile-collection, branch: pixi_2026C2 }
           # - { endstation: fxi, redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov, qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov, repo: fxi-profile-collection, branch: pixi_2026C2 }
-          - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, qs-host: xf27id1-hex-qs1.nsls2.bnl.gov, repo: hex-profile-collection, branch: pixi_2026C2 }
-          - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
-          # - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, qs-host: xf23id2-ios-qs1.nsls2.bnl.gov, repo: ios-profile-collection, branch: pixi_2026C2 }
-          # - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, qs-host: xf04id1-isr-qs1.nsls2.bnl.gov, repo: isr-profile-collection, branch: pixi_2026C2 }
-          # - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, qs-host: xf08id1-iss-qs1.nsls2.bnl.gov, repo: iss-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, qs-host: xf27id1-hex-qs1.nsls2.bnl.gov, repo: hex-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
+          - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, qs-host: xf23id2-ios-qs1.nsls2.bnl.gov, repo: ios-profile-collection, branch: pixi_2026C2 }
+          - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, qs-host: xf04id1-isr-qs1.nsls2.bnl.gov, repo: isr-profile-collection, branch: pixi_2026C2 }
+          - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, qs-host: xf08id1-iss-qs1.nsls2.bnl.gov, repo: iss-profile-collection, branch: pixi_2026C2 }
           # - { endstation: ixs, redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov, qs-host: xf10id1-ixs-qs1.nsls2.bnl.gov, repo: ixs-profile-collection, branch: pixi_2026C2 }
           # - { endstation: lix, redis-host: xf16id1-lix-redis1.nsls2.bnl.gov, qs-host: xf16id1-lix-qs1.nsls2.bnl.gov, repo: lix-profile-collection, branch: pixi_2026C2 }
           # - { endstation: nyx, redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov, qs-host: xf19id2-nyx-qs1.nsls2.bnl.gov, repo: nyx-profile-collection, branch: pixi_2026C2 }
@@ -149,6 +149,7 @@ jobs:
           sudo mkdir -v -p /nsls2/
           sudo chown -v $USER: /nsls2/
           mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/RE-metadata
+          mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/bluesky/logs
           mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}-new
 
           export LOGS_HOME="$HOME"

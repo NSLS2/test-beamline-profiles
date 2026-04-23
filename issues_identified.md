@@ -45,6 +45,34 @@ When details are incomplete, entries are marked as provisional until logs are re
 - Cause: Profile-side Redis SSL configuration mismatch.
 - Owner: csx-profile-collection maintainers.
 
+### HXN
+
+- Status: Confirmed profile issue (dependency branch pin).
+- Symptom: pip install failed while resolving hxnfly dependency from git.
+- Error signature:
+  - Failed to build git+https://github.com/NSLS-II-HXN/hxnfly@master
+  - git checkout -q master failed
+- Cause:
+  - Upstream hxnfly repository does not have a master branch (main exists).
+  - Profile dependency pin references @master.
+- Suggested fix:
+  - Update profile dependency reference from @master to @main (or another valid ref).
+- Owner: hxn-profile-collection maintainers.
+
+### HEX
+
+- Status: Confirmed profile issue (device startup path).
+- Symptom: Startup failed in startup/09-panda.py while connecting Panda device.
+- Error signature:
+  - ophyd_async.core._utils.NotConnectedError
+  - panda: NotConnectedError: pva://XF:27ID1-ES{PANDA:1}:PVI
+- Cause:
+  - Profile attempts live PVA Panda connection during CI startup instead of fully mocking/skipping this hardware path for CI.
+- Suggested fix:
+  - Gate Panda connection logic for CI mode and use mock path in CI.
+  - Ensure RUNNING_IN_NSLS2_CI (or equivalent) correctly bypasses real PVA device connection in startup.
+- Owner: hex-profile-collection maintainers.
+
 ## Provisional Profile Collection Issues (Need Log Refresh for Full Error Detail)
 
 ### CDI
@@ -63,3 +91,16 @@ When details are incomplete, entries are marked as provisional until logs are re
 
 - Current evidence indicates the above entries are profile-collection-side issues.
 - For CMS specifically, CI env propagation was verified healthy by the TILED_API_KEY length diagnostic.
+
+## CI Harness Gaps (Fixed)
+
+### FMX
+
+- Status: CI harness gap identified and fixed.
+- Symptom: startup/01-bluesky.py failed opening:
+  - /nsls2/data/fmx/shared/config/bluesky/logs/startup_log.log
+- Error signature: FileNotFoundError for missing parent directory.
+- Root cause: CI setup did not create /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/bluesky/logs.
+- Fix applied in harness:
+  - Beamline directory setup now creates:
+    - /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/bluesky/logs
