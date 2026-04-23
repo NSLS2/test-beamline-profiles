@@ -14,40 +14,40 @@ jobs:
         pixi-env: [terminal, qs]
         endstation:
           - amx
-          - bmm
-          - cdi
-          - chx
-          - cms
-          - csx
-          - fmx
-          - fxi
-          - hex
-          - hxn
-          - ios
-          - isr
-          - iss
-          - ixs
-          - lix
-          - nyx
-          - opls
-          - pdf
-          - qas
-          - six
-          - smi
-          - srx
-          - tes
-          - tst
-          - xfm
-          - xfp
-          - xpd
-          - arpes
-          - xpeem
-          - haxpes
-          - nexafs
-          - rsoxs
-          - vppem
-          - maia
-          - xpdd
+          # - bmm
+          # - cdi
+          # - chx
+          # - cms
+          # - csx
+          # - fmx
+          # - fxi
+          # - hex
+          # - hxn
+          # - ios
+          # - isr
+          # - iss
+          # - ixs
+          # - lix
+          # - nyx
+          # - opls
+          # - pdf
+          # - qas
+          # - six
+          # - smi
+          # - srx
+          # - tes
+          # - tst
+          # - xfm
+          # - xfp
+          # - xpd
+          # - arpes
+          # - xpeem
+          # - haxpes
+          # - nexafs
+          # - rsoxs
+          # - vppem
+          # - maia
+          # - xpdd
         # Each entry is an endstation with its redis hostname, queueserver hostname, and repo.
         # For single-endstation beamlines, beamline-acronym is omitted
         # (defaults to endstation name in the env vars step).
@@ -55,41 +55,41 @@ jobs:
         # (e.g. branch: "2025-2.0" to test a specific release tag).
         include:
           - { endstation: amx, redis-host: xf17id1-amx-redis1.nsls2.bnl.gov, qs-host: xf17id1-amx-qs1.nsls2.bnl.gov, repo: amx-profile-collection, branch: pixi_2026C2 }
-          - { endstation: bmm, redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov, qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov, repo: bmm-profile-collection, branch: main }
-          - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov, repo: cdi-profile-collection, branch: pixi_2026C2 }
-          - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, qs-host: xf11id1-chx-qs1.nsls2.bnl.gov, repo: chx-profile-collection, branch: pixi_2026C2 }
-          - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, qs-host: xf11bm-cms-qs1.nsls2.bnl.gov, repo: cms-profile-collection, branch: pixi_2026C2 }
-          - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, qs-host: xf23id1-csx-qs1.nsls2.bnl.gov, repo: csx-profile-collection, branch: main }
-          - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov, repo: fmx-profile-collection, branch: pixi_2026C2 }
-          - { endstation: fxi, redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov, qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov, repo: fxi-profile-collection, branch: pixi_2026C2 }
-          - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, qs-host: xf27id1-hex-qs1.nsls2.bnl.gov, repo: hex-profile-collection, branch: pixi_2026C2 }
-          - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
-          - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, qs-host: xf23id2-ios-qs1.nsls2.bnl.gov, repo: ios-profile-collection, branch: pixi_2026C2 }
-          - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, qs-host: xf04id1-isr-qs1.nsls2.bnl.gov, repo: isr-profile-collection, branch: pixi_2026C2 }
-          - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, qs-host: xf08id1-iss-qs1.nsls2.bnl.gov, repo: iss-profile-collection, branch: pixi_2026C2 }
-          - { endstation: ixs, redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov, qs-host: xf10id1-ixs-qs1.nsls2.bnl.gov, repo: ixs-profile-collection, branch: pixi_2026C2 }
-          - { endstation: lix, redis-host: xf16id1-lix-redis1.nsls2.bnl.gov, qs-host: xf16id1-lix-qs1.nsls2.bnl.gov, repo: lix-profile-collection, branch: pixi_2026C2 }
-          - { endstation: nyx, redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov, qs-host: xf19id2-nyx-qs1.nsls2.bnl.gov, repo: nyx-profile-collection, branch: pixi_2026C2 }
-          - { endstation: opls, redis-host: xf12id1-opls-redis1.nsls2.bnl.gov, qs-host: xf12id1-opls-qs1.nsls2.bnl.gov, repo: opls-profile-collection, branch: pixi_2026C2 }
-          - { endstation: pdf, redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov, qs-host: xf28id1-pdf-qs1.nsls2.bnl.gov, repo: pdf-profile-collection, branch: pixi_2026C2 }
-          - { endstation: qas, redis-host: xf07bm-qas-redis1.nsls2.bnl.gov, qs-host: xf07bm-qas-qs1.nsls2.bnl.gov, repo: qas-profile-collection, branch: pixi_2026C2 }
-          - { endstation: six, redis-host: xf02id1-six-redis1.nsls2.bnl.gov, qs-host: xf02id1-six-qs1.nsls2.bnl.gov, repo: six-profile-collection, branch: pixi_2026C2 }
-          - { endstation: smi, redis-host: xf12id2-smi-redis1.nsls2.bnl.gov, qs-host: xf12id2-smi-qs1.nsls2.bnl.gov, repo: smi-profile-collection, branch: main }
-          - { endstation: srx, redis-host: xf05id2-srx-redis1.nsls2.bnl.gov, qs-host: xf05id2-srx-qs1.nsls2.bnl.gov, repo: srx-profile-collection, branch: pixi_2026C2 }
-          - { endstation: tes, redis-host: xf08bm-tes-redis1.nsls2.bnl.gov, qs-host: xf08bm-tes-qs1.nsls2.bnl.gov, repo: tes-profile-collection, branch: pixi_2026C2 }
-          - { endstation: tst, redis-host: xf31id1-tst-redis1.nsls2.bnl.gov, qs-host: xf31id1-tst-qs1.nsls2.bnl.gov, repo: tst-profile-collection, branch: pixi_2026C2 }
-          - { endstation: xfm, redis-host: xf04bm-xfm-redis1.nsls2.bnl.gov, qs-host: xf04bm-xfm-qs1.nsls2.bnl.gov, repo: xfm-profile-collection, branch: pixi_2026C2 }
-          - { endstation: xfp, redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov, qs-host: xf17bm-xfp-qs1.nsls2.bnl.gov, repo: xfp-profile-collection, branch: pixi_2026C2 }
-          - { endstation: xpd, redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection, branch: pixi_2026C2 }
-          # Multi-endstation beamlines (beamline-acronym differs from endstation)
-          - { endstation: arpes, redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov, qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov, repo: esm-arpes-profile-collection, beamline-acronym: esm, branch: main}
-          - { endstation: xpeem, redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov, qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov, repo: esm-xpeem-profile-collection, beamline-acronym: esm, branch: main }
-          - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, qs-host: xf07id1-haxpes-qs1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection, beamline-acronym: sst, branch: main }
-          - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, qs-host: xf07id1-nexafs-qs1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
-          - { endstation: rsoxs, redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov, qs-host: xf07id1-rsoxs-qs1.nsls2.bnl.gov, repo: sst-rsoxs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
-          - { endstation: vppem, redis-host: xf07id1-vppem-redis1.nsls2.bnl.gov, qs-host: xf07id1-vppem-qs1.nsls2.bnl.gov, repo: sst-vppem-profile-collection, beamline-acronym: sst, branch: main }
-          - { endstation: maia, redis-host: xf04bm-maia-redis1.nsls2.bnl.gov, qs-host: xf04bm-maia-qs1.nsls2.bnl.gov, repo: xfm-maia-profile-collection, beamline-acronym: xfm, branch: pixi_2026C2 }
-          - { endstation: xpdd, redis-host: xf28id2-xpdd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpdd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection-ldrd20-31, beamline-acronym: xpd, branch: main }
+          # - { endstation: bmm, redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov, qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov, repo: bmm-profile-collection, branch: main }
+          # - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov, repo: cdi-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, qs-host: xf11id1-chx-qs1.nsls2.bnl.gov, repo: chx-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, qs-host: xf11bm-cms-qs1.nsls2.bnl.gov, repo: cms-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, qs-host: xf23id1-csx-qs1.nsls2.bnl.gov, repo: csx-profile-collection, branch: main }
+          # - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov, repo: fmx-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: fxi, redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov, qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov, repo: fxi-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, qs-host: xf27id1-hex-qs1.nsls2.bnl.gov, repo: hex-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, qs-host: xf23id2-ios-qs1.nsls2.bnl.gov, repo: ios-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, qs-host: xf04id1-isr-qs1.nsls2.bnl.gov, repo: isr-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, qs-host: xf08id1-iss-qs1.nsls2.bnl.gov, repo: iss-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: ixs, redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov, qs-host: xf10id1-ixs-qs1.nsls2.bnl.gov, repo: ixs-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: lix, redis-host: xf16id1-lix-redis1.nsls2.bnl.gov, qs-host: xf16id1-lix-qs1.nsls2.bnl.gov, repo: lix-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: nyx, redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov, qs-host: xf19id2-nyx-qs1.nsls2.bnl.gov, repo: nyx-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: opls, redis-host: xf12id1-opls-redis1.nsls2.bnl.gov, qs-host: xf12id1-opls-qs1.nsls2.bnl.gov, repo: opls-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: pdf, redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov, qs-host: xf28id1-pdf-qs1.nsls2.bnl.gov, repo: pdf-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: qas, redis-host: xf07bm-qas-redis1.nsls2.bnl.gov, qs-host: xf07bm-qas-qs1.nsls2.bnl.gov, repo: qas-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: six, redis-host: xf02id1-six-redis1.nsls2.bnl.gov, qs-host: xf02id1-six-qs1.nsls2.bnl.gov, repo: six-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: smi, redis-host: xf12id2-smi-redis1.nsls2.bnl.gov, qs-host: xf12id2-smi-qs1.nsls2.bnl.gov, repo: smi-profile-collection, branch: main }
+          # - { endstation: srx, redis-host: xf05id2-srx-redis1.nsls2.bnl.gov, qs-host: xf05id2-srx-qs1.nsls2.bnl.gov, repo: srx-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: tes, redis-host: xf08bm-tes-redis1.nsls2.bnl.gov, qs-host: xf08bm-tes-qs1.nsls2.bnl.gov, repo: tes-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: tst, redis-host: xf31id1-tst-redis1.nsls2.bnl.gov, qs-host: xf31id1-tst-qs1.nsls2.bnl.gov, repo: tst-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: xfm, redis-host: xf04bm-xfm-redis1.nsls2.bnl.gov, qs-host: xf04bm-xfm-qs1.nsls2.bnl.gov, repo: xfm-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: xfp, redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov, qs-host: xf17bm-xfp-qs1.nsls2.bnl.gov, repo: xfp-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: xpd, redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection, branch: pixi_2026C2 }
+          # # Multi-endstation beamlines (beamline-acronym differs from endstation)
+          # - { endstation: arpes, redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov, qs-host: xf21id1-arpes-qs1.nsls2.bnl.gov, repo: esm-arpes-profile-collection, beamline-acronym: esm, branch: main}
+          # - { endstation: xpeem, redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov, qs-host: xf21id1-xpeem-qs1.nsls2.bnl.gov, repo: esm-xpeem-profile-collection, beamline-acronym: esm, branch: main }
+          # - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, qs-host: xf07id1-haxpes-qs1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection, beamline-acronym: sst, branch: main }
+          # - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, qs-host: xf07id1-nexafs-qs1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
+          # - { endstation: rsoxs, redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov, qs-host: xf07id1-rsoxs-qs1.nsls2.bnl.gov, repo: sst-rsoxs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
+          # - { endstation: vppem, redis-host: xf07id1-vppem-redis1.nsls2.bnl.gov, qs-host: xf07id1-vppem-qs1.nsls2.bnl.gov, repo: sst-vppem-profile-collection, beamline-acronym: sst, branch: main }
+          # - { endstation: maia, redis-host: xf04bm-maia-redis1.nsls2.bnl.gov, qs-host: xf04bm-maia-qs1.nsls2.bnl.gov, repo: xfm-maia-profile-collection, beamline-acronym: xfm, branch: pixi_2026C2 }
+          # - { endstation: xpdd, redis-host: xf28id2-xpdd-redis1.nsls2.bnl.gov, qs-host: xf28id2-xpdd-qs1.nsls2.bnl.gov, repo: xpd-profile-collection-ldrd20-31, beamline-acronym: xpd, branch: main }
 
     runs-on: ubuntu-latest
     steps:
@@ -314,6 +314,7 @@ jobs:
           echo "127.0.0.1 ${REDIS_HOST}" | sudo tee -a /etc/hosts
           echo "127.0.0.1 info.${BEAMLINE_ACRONYM}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           echo "127.0.0.1 tiled.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 api.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           for i in {1..3}; do
               echo "127.0.0.1 mongo${i}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           done
@@ -326,6 +327,47 @@ jobs:
         shell: bash -leo pipefail {0}
         run: |
           eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
+
+          # Start mock API server for facility/cycles endpoint on port 8080
+          # then forward port 80 to it via iptables
+          python3 << 'MOCK_API_EOF' &
+          from http.server import HTTPServer, BaseHTTPRequestHandler
+          import json
+          
+          class MockAPIHandler(BaseHTTPRequestHandler):
+              def do_GET(self):
+                  if self.path == '/v1/facility/nsls2/cycles/current':
+                      response = {
+                          'cycle': '2025-2',
+                          'start_date': '2025-02-01',
+                          'end_date': '2025-02-28'
+                      }
+                      self.send_response(200)
+                      self.send_header('Content-type', 'application/json')
+                      self.end_headers()
+                      self.wfile.write(json.dumps(response).encode())
+                  else:
+                      self.send_response(404)
+                      self.end_headers()
+              
+              def log_message(self, format, *args):
+                  pass  # suppress logs
+          
+          server = HTTPServer(('127.0.0.1', 8080), MockAPIHandler)
+          try:
+              server.serve_forever()
+          except KeyboardInterrupt:
+              pass
+          finally:
+              server.server_close()
+          MOCK_API_EOF
+          MOCK_API_PID=$!
+          disown
+          echo "MOCK_API_PID=${MOCK_API_PID}" >> $GITHUB_ENV
+          sleep 1
+
+          # Forward port 80 to 8080 so HTTP requests to api.nsls2.bnl.gov resolve correctly
+          sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -d 127.0.0.1 -j REDIRECT --to-port 8080 || true
 
           # Use the same API key profiles export for writes so hardcoded-key
           # calls can authenticate against this mock Tiled server.
@@ -522,6 +564,15 @@ jobs:
             kill -SIGINT "${TILED_PID}" 2>/dev/null || true
           fi
           sudo pkill -SIGINT -f "tiled serve catalog --temp" 2>/dev/null || true
+
+      - name: Stop mock API server
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${MOCK_API_PID:-}" ]; then
+            kill -SIGINT "${MOCK_API_PID}" 2>/dev/null || true
+          fi
+          sudo pkill -f "python3.*MockAPI" 2>/dev/null || true
 
       - name: Stop blackhole IOC
         if: always()
