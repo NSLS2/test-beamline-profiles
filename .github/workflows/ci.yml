@@ -138,7 +138,7 @@ jobs:
               echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret"
               echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test"
               echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test"
-              echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=localhost:9092"
+              echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092"
               echo "BLUESKY_KAFKA_PASSWORD=test"
           } >> $GITHUB_ENV
 
@@ -248,7 +248,7 @@ jobs:
           ---
             abort_run_on_kafka_exception: false
             bootstrap_servers:
-              - localhost:9092
+              - 127.0.0.1:9092
             runengine_producer_config:
               security.protocol: PLAINTEXT
           EOF
@@ -262,6 +262,38 @@ jobs:
         uses: supercharge/mongodb-github-action@5a87bd81f88e2a8b195f8b7b656f5cda1350815a # 1.11.0
         with:
           mongodb-version: '4.4'
+
+      - name: Start Kafka
+        shell: bash -leo pipefail {0}
+        run: |
+          # Single-node KRaft broker on localhost:9092 to satisfy the Kafka config
+          # written to /etc/bluesky/kafka.yml and BLUESKY_KAFKA_BOOTSTRAP_SERVERS.
+          docker run -d --name kafka \
+            -p 9092:9092 -p 9093:9093 \
+            -e KAFKA_NODE_ID=1 \
+            -e KAFKA_PROCESS_ROLES=broker,controller \
+            -e KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
+            -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
+            -e KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER \
+            -e KAFKA_CONTROLLER_QUORUM_VOTERS=1@localhost:9093 \
+            -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
+            -e KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT \
+            -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+            -e KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1 \
+            -e KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1 \
+            apache/kafka:3.9.0
+
+          for i in {1..60}; do
+            if docker exec kafka /opt/kafka/bin/kafka-broker-api-versions.sh \
+                --bootstrap-server localhost:9092 >/dev/null 2>&1; then
+              echo "Kafka broker is ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Kafka did not become ready within 60 seconds"
+          docker logs kafka || true
+          exit 1
 
       - name: Configure DNS and seed Redis
         shell: bash -leo pipefail {0}
@@ -369,6 +401,8 @@ jobs:
           show_log "QS manager" /tmp/qs_manager.log
           show_log "Bluesky" "${LOGS_HOME}/.cache/bluesky/log/bluesky.log"
           show_log "Bluesky IPython" "${LOGS_HOME}/.cache/bluesky/log/bluesky_ipython.log"
+          echo "=== Kafka ==="
+          docker logs kafka 2>&1 || echo "(not produced)"
 
       - name: Stop QS manager
         if: always()
