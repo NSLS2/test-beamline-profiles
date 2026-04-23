@@ -202,7 +202,7 @@ jobs:
       - name: Set up pixi
         uses: prefix-dev/setup-pixi@19eac09b398e3d0c747adc7921926a6d802df4da # v0.8.8
         with:
-          pixi-version: v0.67.1
+          pixi-version: v0.56.0
           run-install: false
           cache: false
 
@@ -216,7 +216,7 @@ jobs:
         shell: bash -leo pipefail {0}
         run: |
           if [ -f "${CLONED_REPO}/.ci/bl-specific.sh" ]; then
-              # Activate pixi environment so beamline scripts can use conda activate.
+              # Activate the profile's pixi env so the script inherits its PATH/env.
               eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
               echo "Sourcing ${CLONED_REPO}/.ci/bl-specific.sh"
               source "${CLONED_REPO}/.ci/bl-specific.sh"
@@ -314,7 +314,7 @@ jobs:
               echo "127.0.0.1 mongo${i}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
           done
 
-          sudo apt-get install -y -qq redis-tools caddy
+          sudo apt-get install -y -qq redis-tools
           redis-cli -h ${REDIS_HOST} set "cycle" "\"2025-2\""
           redis-cli -h ${REDIS_HOST} set "data_session" "\"pass-000000\""
 
@@ -354,18 +354,19 @@ jobs:
           echo "TILED_PID=${TILED_PID}" >> $GITHUB_ENV
 
           # Use Caddy as a reverse proxy on 443 with self-signed cert.
+          sudo apt-get install -y -qq caddy
+          # Grant the cap to bind privileged ports so we can run caddy unprivileged
+          # and capture its real PID via $! (avoiding sudo wrapping the process).
+          sudo setcap cap_net_bind_service=+ep "$(command -v caddy)"
+
           cat > /tmp/Caddyfile << 'CADDYFILE'
-          {
-            http_port 80
-            https_port 443
-          }
           https://tiled.nsls2.bnl.gov {
             tls /tmp/tiled.crt /tmp/tiled.key
             reverse_proxy 127.0.0.1:8000
           }
           CADDYFILE
 
-          nohup sudo -E caddy run --config /tmp/Caddyfile > /tmp/caddy.log 2>&1 &
+          nohup caddy run --config /tmp/Caddyfile > /tmp/caddy.log 2>&1 &
           CADDY_PID=$!
           disown
           echo "CADDY_PID=${CADDY_PID}" >> $GITHUB_ENV
@@ -484,7 +485,6 @@ jobs:
           if [ -n "${CADDY_PID:-}" ]; then
             kill -SIGINT "${CADDY_PID}" 2>/dev/null || true
           fi
-          sudo pkill -SIGINT -f "caddy run" 2>/dev/null || true
 
       - name: Stop Tiled server
         if: always()
