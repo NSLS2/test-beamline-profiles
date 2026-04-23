@@ -101,6 +101,22 @@ When details are incomplete, entries are marked as provisional until logs are re
   - Remove or correct the `globus-sdk` channel reference in pixi.toml.
   - If globus-sdk packages are needed, verify the correct channel URL or use conda-forge alternative.
 - Owner: lix-profile-collection maintainers.
+
+### RSOXS
+
+- Status: Confirmed profile issue (line ending format).
+- Symptom: `.ci/bl-specific.sh` execution failed with shell error.
+- Error signature:
+  - `.ci/bl-specific.sh: line 2: $'\r': command not found`
+- Cause:
+  - `.ci/bl-specific.sh` file has Windows-style line endings (CRLF) instead of Unix-style (LF).
+  - When bash tries to execute the script, it encounters the carriage return character as a literal command.
+- Suggested fix:
+  - Convert `.ci/bl-specific.sh` line endings from CRLF to LF.
+  - In git: `git checkout --theirs` followed by `git config core.safecrlf false` and `dos2unix .ci/bl-specific.sh`, or use editor to change line endings.
+  - Alternatively, ensure all `.ci/*.sh` scripts use LF line endings in git attributes.
+- Owner: sst-rsoxs-profile-collection maintainers (or broader SST multi-endstation issue).
+
 ## Provisional Profile Collection Issues (Need Log Refresh for Full Error Detail)
 
 ### CDI
