@@ -17,12 +17,12 @@ jobs:
           # - bmm
           # - cdi
           # - chx
-          - cms
+          # - cms
           # - csx
           - fmx
           # - fxi
           - hex
-          # - hxn
+          - hxn
           # - ios
           # - isr
           # - iss
@@ -58,12 +58,12 @@ jobs:
           # - { endstation: bmm, redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov, qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov, repo: bmm-profile-collection, branch: main }
           # - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov, repo: cdi-profile-collection, branch: pixi_2026C2 }
           # - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, qs-host: xf11id1-chx-qs1.nsls2.bnl.gov, repo: chx-profile-collection, branch: pixi_2026C2 }
-          - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, qs-host: xf11bm-cms-qs1.nsls2.bnl.gov, repo: cms-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, qs-host: xf11bm-cms-qs1.nsls2.bnl.gov, repo: cms-profile-collection, branch: pixi_2026C2 }
           # - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, qs-host: xf23id1-csx-qs1.nsls2.bnl.gov, repo: csx-profile-collection, branch: main }
           - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov, repo: fmx-profile-collection, branch: pixi_2026C2 }
           # - { endstation: fxi, redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov, qs-host: xf18id1-fxi-qs1.nsls2.bnl.gov, repo: fxi-profile-collection, branch: pixi_2026C2 }
           - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, qs-host: xf27id1-hex-qs1.nsls2.bnl.gov, repo: hex-profile-collection, branch: pixi_2026C2 }
-          # - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
+          - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, qs-host: xf03id1-hxn-qs1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
           # - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, qs-host: xf23id2-ios-qs1.nsls2.bnl.gov, repo: ios-profile-collection, branch: pixi_2026C2 }
           # - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, qs-host: xf04id1-isr-qs1.nsls2.bnl.gov, repo: isr-profile-collection, branch: pixi_2026C2 }
           # - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, qs-host: xf08id1-iss-qs1.nsls2.bnl.gov, repo: iss-profile-collection, branch: pixi_2026C2 }
