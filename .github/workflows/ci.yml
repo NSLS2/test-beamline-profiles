@@ -216,6 +216,11 @@ jobs:
         shell: bash -leo pipefail {0}
         run: |
           if [ -f "${CLONED_REPO}/.ci/bl-specific.sh" ]; then
+              # Some beamline scripts call `conda activate`; initialize conda
+              # in this shell if available.
+              if command -v conda >/dev/null 2>&1; then
+                  eval "$(conda shell.bash hook)"
+              fi
               echo "Sourcing ${CLONED_REPO}/.ci/bl-specific.sh"
               source "${CLONED_REPO}/.ci/bl-specific.sh"
           fi
