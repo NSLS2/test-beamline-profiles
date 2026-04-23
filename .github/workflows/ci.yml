@@ -366,22 +366,19 @@ jobs:
           echo "MOCK_API_PID=${MOCK_API_PID}" >> $GITHUB_ENV
           sleep 1
 
-          # Forward port 80 to 8080 so HTTP requests to api.nsls2.bnl.gov resolve correctly
-          sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -d 127.0.0.1 -j REDIRECT --to-port 8080 || true
-
           # Use the same API key profiles export for writes so hardcoded-key
           # calls can authenticate against this mock Tiled server.
           TILED_SERVER_API_KEY_VAR="TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}"
           TILED_SERVER_API_KEY="${!TILED_SERVER_API_KEY_VAR:-secret}"
           echo "TILED_API_KEY=${TILED_SERVER_API_KEY}" >> $GITHUB_ENV
 
-          # Generate a short-lived cert for tiled.nsls2.bnl.gov and trust it for
-          # client calls made by profiles in this job.
+          # Generate a short-lived cert for tiled.nsls2.bnl.gov and api.nsls2.bnl.gov.
+          # Both use the same cert since they resolve to 127.0.0.1.
           openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes \
             -keyout /tmp/tiled.key \
             -out /tmp/tiled.crt \
             -subj "/CN=tiled.nsls2.bnl.gov" \
-            -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,IP:127.0.0.1"
+            -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,DNS:api.nsls2.bnl.gov,IP:127.0.0.1"
           {
             echo "SSL_CERT_FILE=/tmp/tiled.crt"
             echo "REQUESTS_CA_BUNDLE=/tmp/tiled.crt"
@@ -413,6 +410,10 @@ jobs:
           https://tiled.nsls2.bnl.gov {
             tls /tmp/tiled.crt /tmp/tiled.key
             reverse_proxy 127.0.0.1:8000
+          }
+          https://api.nsls2.bnl.gov {
+            tls /tmp/tiled.crt /tmp/tiled.key
+            reverse_proxy 127.0.0.1:8080
           }
           CADDYFILE
 
@@ -450,6 +451,22 @@ jobs:
           done
           if [ "$proxy_ready" -ne 1 ]; then
             echo "Caddy reverse-proxy (https://tiled.nsls2.bnl.gov) did not become ready within 30 seconds"
+            cat /tmp/caddy.log || true
+            exit 1
+          fi
+
+          # Phase 3: API server through caddy reverse-proxy + TLS.
+          api_ready=0
+          for i in {1..30}; do
+            if curl --silent --fail --cacert /tmp/tiled.crt \
+              https://api.nsls2.bnl.gov/v1/facility/nsls2/cycles/current >/dev/null 2>&1; then
+              api_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$api_ready" -ne 1 ]; then
+            echo "Mock API server (https://api.nsls2.bnl.gov) did not become ready within 30 seconds"
             cat /tmp/caddy.log || true
             exit 1
           fi

@@ -117,16 +117,35 @@ Profile startup files often call `https://api.nsls2.bnl.gov/v1/facility/nsls2/cy
    echo "MOCK_API_PID=${MOCK_API_PID}" >> $GITHUB_ENV
    ```
 
-3. **Port forward 80 → 8080** (in same step, after mock server starts):
+3. **Add to certificate SAN** when generating self-signed cert:
    ```bash
-   sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -d 127.0.0.1 -j REDIRECT --to-port 8080 || true
+   -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,DNS:api.nsls2.bnl.gov,IP:127.0.0.1"
    ```
 
-4. **Cleanup** mock server in "Stop mock API server" step:
+4. **Add Caddy reverse proxy site block** for HTTPS:
+   ```
+   https://api.nsls2.bnl.gov {
+     tls /tmp/tiled.crt /tmp/tiled.key
+     reverse_proxy 127.0.0.1:8080
+   }
+   ```
+
+5. **Add readiness check** after Caddy starts:
+   ```bash
+   for i in {1..30}; do
+     if curl --silent --fail --cacert /tmp/tiled.crt \
+       https://api.nsls2.bnl.gov/v1/facility/nsls2/cycles/current >/dev/null 2>&1; then
+       api_ready=1; break
+     fi
+     sleep 1
+   done
+   ```
+
+6. **Cleanup** mock server in "Stop mock API server" step:
    ```bash
    if [ -n "${MOCK_API_PID:-}" ]; then
      kill -SIGINT "${MOCK_API_PID}" 2>/dev/null || true
    fi
    ```
 
-This allows profiles to make HTTP calls to the mocked API without blocking on network errors.
+This allows profiles to make HTTPS calls to the mocked API without blocking on SSL errors. Caddy terminates HTTPS and reverse-proxies to the HTTP mock server.
