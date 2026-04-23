@@ -133,6 +133,22 @@ When details are incomplete, entries are marked as provisional until logs are re
   - Recommended: update CI harness or profile to ensure tiled profile is created with correct name for multi-endstation beamlines.
 - Owner: xfm-maia-profile-collection maintainers.
 
+### TST
+
+- Status: Confirmed profile issue (startup hanging/infinite loop).
+- Symptom: Startup process hangs indefinitely after loading `99-pvscan.py`.
+- Error signature:
+  - No explicit error message; process continues running for 12+ minutes without completion.
+  - Last file being loaded is `/home/runner/tst-profile-collection/startup/99-pvscan.py`.
+- Cause:
+  - Likely infinite loop or extremely slow synchronous operation in `99-pvscan.py` or one of the prior startup files.
+  - May involve blocking I/O, hardware polling, or inefficient computation.
+- Suggested fix:
+  - Review `99-pvscan.py` and preceding startup files for infinite loops or blocking operations.
+  - Add timeout handling or async operations for long-running setup code.
+  - Consider deferring expensive initialization to first use rather than startup.
+- Owner: tst-profile-collection maintainers.
+
 ## Provisional Profile Collection Issues (Need Log Refresh for Full Error Detail)
 
 ### CDI
