@@ -335,10 +335,10 @@ jobs:
           # Generate a short-lived cert for tiled.nsls2.bnl.gov and trust it for
           # client calls made by profiles in this job.
           openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes \
-          -keyout /tmp/tiled.key \
-          -out /tmp/tiled.crt \
-          -subj "/CN=tiled.nsls2.bnl.gov" \
-          -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,IP:127.0.0.1"
+            -keyout /tmp/tiled.key \
+            -out /tmp/tiled.crt \
+            -subj "/CN=tiled.nsls2.bnl.gov" \
+            -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,IP:127.0.0.1"
           {
             echo "SSL_CERT_FILE=/tmp/tiled.crt"
             echo "REQUESTS_CA_BUNDLE=/tmp/tiled.crt"
@@ -346,16 +346,28 @@ jobs:
           export SSL_CERT_FILE=/tmp/tiled.crt
           export REQUESTS_CA_BUNDLE=/tmp/tiled.crt
 
+          # Start tiled on a high port (8000) without TLS.
           TILED_BIN="$(command -v tiled)"
-          nohup sudo -E "$TILED_BIN" serve catalog --temp \
+          nohup "$TILED_BIN" serve catalog --temp \
             --host 127.0.0.1 \
-            --port 443 \
-            --ssl-certfile /tmp/tiled.crt \
-            --ssl-keyfile /tmp/tiled.key \
+            --port 8000 \
             --api-key "${TILED_SERVER_API_KEY}" > /tmp/tiled.log 2>&1 &
           TILED_PID=$!
           disown
           echo "TILED_PID=${TILED_PID}" >> $GITHUB_ENV
+
+          # Use Caddy as a reverse proxy on 443 with self-signed cert.
+          cat > /tmp/Caddyfile << 'CADDYFILE'
+          https://tiled.nsls2.bnl.gov {
+            tls /tmp/tiled.crt /tmp/tiled.key
+            reverse_proxy 127.0.0.1:8000
+          }
+          CADDYFILE
+
+          nohup caddy run --config /tmp/Caddyfile > /tmp/caddy.log 2>&1 &
+          CADDY_PID=$!
+          disown
+          echo "CADDY_PID=${CADDY_PID}" >> $GITHUB_ENV
 
           for i in {1..60}; do
             if curl --silent --show-error --fail --cacert /tmp/tiled.crt \
@@ -450,6 +462,7 @@ jobs:
           show_log "Blackhole IOC" /tmp/blackhole_ioc.log
           show_log "Tiled server" /tmp/tiled.log
           show_log "QS manager" /tmp/qs_manager.log
+          show_log "Caddy reverse proxy" /tmp/caddy.log
           show_log "Bluesky" "${LOGS_HOME}/.cache/bluesky/log/bluesky.log"
           show_log "Bluesky IPython" "${LOGS_HOME}/.cache/bluesky/log/bluesky_ipython.log"
           echo "=== Kafka ==="
@@ -462,6 +475,15 @@ jobs:
           if [ -n "${QS_MANAGER_PID:-}" ]; then
               kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
           fi
+
+      - name: Stop Caddy reverse proxy
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${CADDY_PID:-}" ]; then
+            kill -SIGINT "${CADDY_PID}" 2>/dev/null || true
+          fi
+          sudo pkill -SIGINT -f "caddy run" 2>/dev/null || true
 
       - name: Stop Tiled server
         if: always()
