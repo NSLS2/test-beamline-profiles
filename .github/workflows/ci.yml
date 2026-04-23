@@ -371,18 +371,38 @@ jobs:
           disown
           echo "CADDY_PID=${CADDY_PID}" >> $GITHUB_ENV
 
+          # Phase 1: Tiled direct on 127.0.0.1:8000 (bypasses caddy/TLS).
+          # Use /healthz — doesn't depend on catalog init, designed as the
+          # up/down probe (matches tiled's own SimpleTiledServer readiness logic).
+          tiled_ready=0
           for i in {1..60}; do
-            if curl --silent --show-error --fail --cacert /tmp/tiled.crt \
-              https://tiled.nsls2.bnl.gov/api/v1/metadata >/dev/null 2>&1; then
+            if curl --silent --fail http://127.0.0.1:8000/healthz >/dev/null 2>&1; then
+              tiled_ready=1
               break
-            fi
-            if [ "$i" -eq 60 ]; then
-              echo "Tiled did not become ready within 60 seconds"
-              cat /tmp/tiled.log || true
-              exit 1
             fi
             sleep 1
           done
+          if [ "$tiled_ready" -ne 1 ]; then
+            echo "Tiled (direct on :8000) did not become ready within 60 seconds"
+            cat /tmp/tiled.log || true
+            exit 1
+          fi
+
+          # Phase 2: through caddy reverse-proxy + DNS hijack + TLS.
+          proxy_ready=0
+          for i in {1..30}; do
+            if curl --silent --fail --cacert /tmp/tiled.crt \
+              https://tiled.nsls2.bnl.gov/healthz >/dev/null 2>&1; then
+              proxy_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$proxy_ready" -ne 1 ]; then
+            echo "Caddy reverse-proxy (https://tiled.nsls2.bnl.gov) did not become ready within 30 seconds"
+            cat /tmp/caddy.log || true
+            exit 1
+          fi
 
           tiled profile create --name nsls2 https://tiled.nsls2.bnl.gov
 
