@@ -26,28 +26,28 @@ jobs:
           - ios
           - isr
           - iss
-          # - ixs
-          # - lix
-          # - nyx
-          # - opls
-          # - pdf
-          # - qas
-          # - six
-          # - smi
-          # - srx
-          # - tes
-          # - tst
-          # - xfm
-          # - xfp
-          # - xpd
-          # - arpes
-          # - xpeem
-          # - haxpes
-          # - nexafs
-          # - rsoxs
-          # - vppem
-          # - maia
-          # - xpdd
+          - ixs
+          - lix
+          - nyx
+          - opls
+          - pdf
+          - qas
+          - six
+          - smi
+          - srx
+          - tes
+          - tst
+          - xfm
+          - xfp
+          - xpd
+          - arpes
+          - xpeem
+          - haxpes
+          - nexafs
+          - rsoxs
+          - vppem
+          - maia
+          - xpdd
         # Each entry is an endstation with its redis hostname and repo.
         # For single-endstation beamlines, beamline-acronym is omitted
         # (defaults to endstation name in the env vars step).
