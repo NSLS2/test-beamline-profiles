@@ -366,6 +366,7 @@ jobs:
           cat > /tmp/Caddyfile << 'CADDYFILE'
           {
             admin off
+            auto_https disable_redirects
           }
           https://tiled.nsls2.bnl.gov {
             tls /tmp/tiled.crt /tmp/tiled.key
