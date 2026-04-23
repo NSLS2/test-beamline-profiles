@@ -15,8 +15,8 @@ jobs:
         endstation:
           # - amx
           - bmm
-          - cdi
-          - chx
+          # - cdi
+          # - chx
           - cms
           - csx
           # - fmx
@@ -56,8 +56,8 @@ jobs:
         include:
           # - { endstation: amx, redis-host: xf17id1-amx-redis1.nsls2.bnl.gov, qs-host: xf17id1-amx-qs1.nsls2.bnl.gov, repo: amx-profile-collection, branch: pixi_2026C2 }
           - { endstation: bmm, redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov, qs-host: xf06bm-bmm-qs1.nsls2.bnl.gov, repo: bmm-profile-collection, branch: main }
-          - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov, repo: cdi-profile-collection, branch: pixi_2026C2 }
-          - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, qs-host: xf11id1-chx-qs1.nsls2.bnl.gov, repo: chx-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, qs-host: xf09id1-cdi-qs1.nsls2.bnl.gov, repo: cdi-profile-collection, branch: pixi_2026C2 }
+          # - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, qs-host: xf11id1-chx-qs1.nsls2.bnl.gov, repo: chx-profile-collection, branch: pixi_2026C2 }
           - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, qs-host: xf11bm-cms-qs1.nsls2.bnl.gov, repo: cms-profile-collection, branch: pixi_2026C2 }
           - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, qs-host: xf23id1-csx-qs1.nsls2.bnl.gov, repo: csx-profile-collection, branch: main }
           # - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, qs-host: xf17id2-fmx-qs1.nsls2.bnl.gov, repo: fmx-profile-collection, branch: pixi_2026C2 }
