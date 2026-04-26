@@ -95,7 +95,7 @@ jobs:
             beamline-acronym: "qas"
           - org: "NSLS2"
             repo: "six-profile-collection"
-            branch: "main"
+            branch: "2026-2"
             beamline-acronym: "six"
           - org: "NSLS2"
             repo: "smi-profile-collection"
