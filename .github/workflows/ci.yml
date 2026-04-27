@@ -6,164 +6,664 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-  workflow_call:
-    inputs:
-      version: # the variable you can use in place of a matrix
-        required: true
-        type: string
 
 jobs:
   testing_beamline_profiles:
-    name: ${{ matrix.repos.beamline-acronym }}-${{ matrix.repos.repo }}-${{ matrix.repos.branch }}-py311
+    name: ${{ matrix.endstation }} (${{ matrix.pixi-env }})
     strategy:
       fail-fast: false
       matrix:
-        repos:
-          - org: "NSLS-II-AMX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "amx"
-          - org: "NSLS-II-BMM"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "bmm"
-          - org: "NSLS-II-CHX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "chx"
-          # TODO: revert the CMS config once the PR is merged:
-          - org: "thomashopkins32"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "cms"
-          # - org: "NSLS-II-CMS"
-          #   repo: "profile_collection"
-          #   branch: "master"
-          #   beamline-acronym: "cms"
-          - org: "NSLS2"
-            repo: "csx-profile-collection"
-            branch: "main"
-            beamline-acronym: "csx"
-          - org: "NSLS2"
-            repo: "esm-arpes-profile-collection"
-            branch: "main"
-            beamline-acronym: "esm"
-            beamline-endstation: "arpes"
-            beamline-redis-prefix: "arpes-"
-          - org: "NSLS-II-ESM-2"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "esm"
-            beamline-endstation: "xpeem"
-            beamline-redis-prefix: "xpeem-"
-          - org: "NSLS-II-FMX"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "fmx"
-          - org: "NSLS-II-FXI"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "fxi"
-          - org: "NSLS-II-HEX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "hex"
-          - org: "NSLS-II-HXN"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "hxn"
-          - org: "NSLS-II-IOS"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "ios"
-          - org: "NSLS-II-ISR"
-            repo: "profile_D-hutch"
-            branch: "2025-2.0"
-            beamline-acronym: "isr"
-          - org: "NSLS-II-IXS"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "ixs"
-          - org: "NSLS-II-LIX"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "lix"
-          - org: "NSLS-II-NYX"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "nyx"
-          - org: "NSLS-II-PDF"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "pdf"
-          - org: "NSLS-II-QAS"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "qas"
-          - org: "NSLS-II-SIX"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "six"
-          - org: "NSLS-II-SMI"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "smi"
-            beamline-redis-prefix: "swaxs-"
-          - org: "NSLS-II-SRX"
-            repo: "profile_collection"
-            branch: "master"
-            beamline-acronym: "srx"
-          - org: "NSLS-II-SST"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "sst"
-          - org: "NSLS-II-SST"
-            repo: "profile_collection_ucal"
-            branch: "2025-2.0"
-            beamline-acronym: "sst"
-          - org: "NSLS-II-SST"
-            repo: "profile_collection_haxpes"
-            branch: "2025-2.0"
-            beamline-acronym: "sst"
-          - org: "NSLS-II-TES"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "tes"
-          - org: "NSLS-II-TST"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "tst"
-          - org: "NSLS-II-XFM"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "xfm"
-          - org: "NSLS-II-XFM"
-            repo: "profile-collection-maia"
-            branch: "2025-2.0"
-            beamline-acronym: "xfm"
-          - org: "NSLS-II-XFP"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "xfp"
-          - org: "NSLS-II-XPD"
-            repo: "profile_collection"
-            branch: "2025-2.0"
-            beamline-acronym: "xpd"
-          - org: "NSLS-II-XPD-tomo"
-            repo: "profile_collection"
-            branch: "main"
-            beamline-acronym: "xpdd"
+        pixi-env: [terminal] # TODO: re-enable [terminal, qs] when ready to test queueserver
+        endstation:
+          - amx
+          - bmm
+          - cdi
+          - chx
+          - cms
+          - csx
+          - fmx
+          - fxi
+          - hex
+          - hxn
+          - ios
+          - isr
+          - iss
+          - ixs
+          - lix
+          - nyx
+          - opls
+          - pdf
+          - qas
+          - six
+          - smi
+          - srx
+          - tes
+          - tst
+          - xfm
+          - xfp
+          - xpd
+          - arpes
+          - xpeem
+          - haxpes
+          - nexafs
+          - rsoxs
+          - vppem
+          - maia
+          - xpdd
+        # Each entry is an endstation with its redis hostname and repo.
+        # For single-endstation beamlines, beamline-acronym is omitted
+        # (defaults to endstation name in the env vars step).
+        # An optional 'branch' field overrides the default 'main' branch
+        # (e.g. branch: "2025-2.0" to test a specific release tag).
+        include:
+          - { endstation: amx, redis-host: xf17id1-amx-redis1.nsls2.bnl.gov, repo: amx-profile-collection, branch: pixi_2026C2 }
+          - { endstation: bmm, redis-host: xf06bm-bmm-redis1.nsls2.bnl.gov, repo: bmm-profile-collection, branch: main }
+          - { endstation: cdi, redis-host: xf09id1-cdi-redis1.nsls2.bnl.gov, repo: cdi-profile-collection, branch: pixi_2026C2 }
+          - { endstation: chx, redis-host: xf11id1-chx-redis1.nsls2.bnl.gov, repo: chx-profile-collection, branch: pixi_2026C2 }
+          - { endstation: cms, redis-host: xf11bm-cms-redis1.nsls2.bnl.gov, repo: cms-profile-collection, branch: pixi_2026C2 }
+          - { endstation: csx, redis-host: xf23id1-csx-redis1.nsls2.bnl.gov, repo: csx-profile-collection, branch: main }
+          - { endstation: fmx, redis-host: xf17id2-fmx-redis1.nsls2.bnl.gov, repo: fmx-profile-collection, branch: pixi_2026C2 }
+          - { endstation: fxi, redis-host: xf18id1-fxi-redis1.nsls2.bnl.gov, repo: fxi-profile-collection, branch: pixi_2026C2 }
+          - { endstation: hex, redis-host: xf27id1-hex-redis1.nsls2.bnl.gov, repo: hex-profile-collection, branch: pixi_2026C2 }
+          - { endstation: hxn, redis-host: xf03id1-hxn-redis1.nsls2.bnl.gov, repo: hxn-profile-collection, branch: pixi_2026C2 }
+          - { endstation: ios, redis-host: xf23id2-ios-redis1.nsls2.bnl.gov, repo: ios-profile-collection, branch: pixi_2026C2 }
+          - { endstation: isr, redis-host: xf04id1-isr-redis1.nsls2.bnl.gov, repo: isr-profile-collection, branch: pixi_2026C2 }
+          - { endstation: iss, redis-host: xf08id1-iss-redis1.nsls2.bnl.gov, repo: iss-profile-collection, branch: pixi_2026C2 }
+          - { endstation: ixs, redis-host: xf10id1-ixs-redis1.nsls2.bnl.gov, repo: ixs-profile-collection, branch: pixi_2026C2 }
+          - { endstation: lix, redis-host: xf16id1-lix-redis1.nsls2.bnl.gov, repo: lix-profile-collection, branch: pixi_2026C2 }
+          - { endstation: nyx, redis-host: xf19id2-nyx-redis1.nsls2.bnl.gov, repo: nyx-profile-collection, branch: pixi_2026C2 }
+          - { endstation: opls, redis-host: xf12id1-opls-redis1.nsls2.bnl.gov, repo: opls-profile-collection, branch: pixi_2026C2 }
+          - { endstation: pdf, redis-host: xf28id1-pdf-redis1.nsls2.bnl.gov, repo: pdf-profile-collection, branch: pixi_2026C2 }
+          - { endstation: qas, redis-host: xf07bm-qas-redis1.nsls2.bnl.gov, repo: qas-profile-collection, branch: pixi_2026C2 }
+          - { endstation: six, redis-host: xf02id1-six-redis1.nsls2.bnl.gov, repo: six-profile-collection, branch: main }
+          - { endstation: smi, redis-host: xf12id2-smi-redis1.nsls2.bnl.gov, repo: smi-profile-collection, branch: main }
+          - { endstation: srx, redis-host: xf05id2-srx-redis1.nsls2.bnl.gov, repo: srx-profile-collection, branch: pixi_2026C2 }
+          - { endstation: tes, redis-host: xf08bm-tes-redis1.nsls2.bnl.gov, repo: tes-profile-collection, branch: pixi_2026C2 }
+          - { endstation: tst, redis-host: xf31id1-tst-redis1.nsls2.bnl.gov, repo: tst-profile-collection, branch: pixi_2026C2 }
+          - { endstation: xfm, redis-host: xf04bm-xfm-redis1.nsls2.bnl.gov, repo: xfm-profile-collection, branch: pixi_2026C2 }
+          - { endstation: xfp, redis-host: xf17bm-xfp-redis1.nsls2.bnl.gov, repo: xfp-profile-collection, branch: pixi_2026C2 }
+          - { endstation: xpd, redis-host: xf28id2-xpd-redis1.nsls2.bnl.gov, repo: xpd-profile-collection, branch: pixi_2026C2 }
+          # Multi-endstation beamlines (beamline-acronym differs from endstation)
+          - { endstation: arpes, redis-host: xf21id1-arpes-redis1.nsls2.bnl.gov, repo: esm-arpes-profile-collection, beamline-acronym: esm, branch: main}
+          - { endstation: xpeem, redis-host: xf21id1-xpeem-redis1.nsls2.bnl.gov, repo: esm-xpeem-profile-collection, beamline-acronym: esm, branch: main }
+          - { endstation: haxpes, redis-host: xf07id1-haxpes-redis1.nsls2.bnl.gov, repo: sst-haxpes-profile-collection, beamline-acronym: sst, branch: main }
+          - { endstation: nexafs, redis-host: xf07id1-nexafs-redis1.nsls2.bnl.gov, repo: sst-nexafs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
+          - { endstation: rsoxs, redis-host: xf07id1-rsoxs-redis1.nsls2.bnl.gov, repo: sst-rsoxs-profile-collection, beamline-acronym: sst, branch: pixi_2026C2 }
+          - { endstation: vppem, redis-host: xf07id1-vppem-redis1.nsls2.bnl.gov, repo: sst-vppem-profile-collection, beamline-acronym: sst, branch: main }
+          - { endstation: maia, redis-host: xf04bm-maia-redis1.nsls2.bnl.gov, repo: xfm-maia-profile-collection, beamline-acronym: xfm, branch: pixi_2026C2 }
+          - { endstation: xpdd, redis-host: xf28id2-xpdd-redis1.nsls2.bnl.gov, repo: xpd-profile-collection-ldrd20-31, beamline-acronym: xpd, branch: main }
 
     runs-on: ubuntu-latest
     steps:
-      - name: Run Integration Tests Against Beamline Profiles
-        uses: NSLS2/gha-beamline-integration-test@2025-1.0-test
+      - name: Checkout test harness
+        uses: actions/checkout@v4
         with:
-          conda_env_url: "https://zenodo.org/records/15171538/files/2025-2.0-py311-tiled.tar.gz"
-          conda_env_md5: "3d705483eab31648fae7cf0ce9a77e72"
-          org: "${{ matrix.repos.org }}"
-          repo: "${{ matrix.repos.repo }}"
-          branch: "${{ matrix.repos.branch }}"
-          beamline-acronym: "${{ matrix.repos.beamline-acronym }}"
-          beamline-endstation: "${{ matrix.repos.beamline-endstation }}"
-          beamline-redis-prefix: "${{ matrix.repos.beamline-redis-prefix }}"
+          persist-credentials: false
+
+      - name: Clone profile collection
+        shell: bash -leo pipefail {0}
+        run: |
+          REPO_NAME="${{ matrix.repo }}"
+          BRANCH="${{ matrix.branch || 'main' }}"
+          export CLONED_REPO="$HOME/${REPO_NAME}"
+          echo "CLONED_REPO=${CLONED_REPO}" >> $GITHUB_ENV
+          git clone -b "${BRANCH}" "https://github.com/NSLS2/${REPO_NAME}" ${CLONED_REPO}
+
+      # TODO: re-enable once profile collections have been updated to include a
+      # Brookhaven-attributed LICENSE file. Most profiles currently fail this
+      # check.
+      # - name: Check LICENSE
+      #   shell: bash -leo pipefail {0}
+      #   run: |
+      #     if [ ! -f "${CLONED_REPO}/LICENSE" ]; then
+      #         echo "LICENSE file not found. Exiting..."
+      #         exit 1
+      #     fi
+      #     if ! grep -q "Brookhaven National Laboratory" "${CLONED_REPO}/LICENSE"; then
+      #         echo "LICENSE does not contain 'Brookhaven National Laboratory'. Exiting..."
+      #         exit 1
+      #     fi
+
+      - name: Endstation env vars
+        shell: bash -leo pipefail {0}
+        run: |
+          # For single-endstation beamlines, beamline-acronym == endstation.
+          # For multi-endstation beamlines, beamline-acronym is set explicitly in the matrix.
+          BEAMLINE_ACRONYM="${{ matrix['beamline-acronym'] || matrix.endstation }}"
+          BEAMLINE_ACRONYM_UPPER="${BEAMLINE_ACRONYM^^}"
+
+          {
+              echo "BEAMLINE_ACRONYM=${BEAMLINE_ACRONYM}"
+              echo "ENDSTATION_ACRONYM=${{ matrix.endstation }}"
+              echo "REDIS_HOST=${{ matrix['redis-host'] }}"
+              echo "QS_HOST=${{ matrix['qs-host'] }}"
+              echo "TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}=secret"
+              echo "TILED_BLUESKY_WRITING_API_KEY=secret"
+              echo "MONGO_USER_${BEAMLINE_ACRONYM_UPPER}=test"
+              echo "MONGO_PASSWORD_${BEAMLINE_ACRONYM_UPPER}=test"
+              echo "BLUESKY_KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092"
+              echo "BLUESKY_KAFKA_PASSWORD=test"
+          } >> $GITHUB_ENV
+
+      - name: Beamline directory setup
+        shell: bash -leo pipefail {0}
+        run: |
+          sudo mkdir -v -p /nsls2/
+          sudo chown -v $USER: /nsls2/
+          mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/RE-metadata
+          mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}/shared/config/bluesky/logs
+          mkdir -v -p /nsls2/data/${BEAMLINE_ACRONYM}-new
+
+          export LOGS_HOME="$HOME"
+          if [ "${BEAMLINE_ACRONYM}" == "srx" ]; then
+              export LOGS_HOME="/home/xf05id1"
+              sudo mkdir -v -p /home/xf05id1/
+              sudo chown -v $USER: /home/xf05id1/
+          elif [ "${BEAMLINE_ACRONYM}" == "hxn" ]; then
+              sudo mkdir -v -p /home/xf03id/
+              sudo chown -v $USER: /home/xf03id/
+              mkdir -v -p /home/xf03id/logs/
+              touch /home/xf03id/benchmark.out
+          fi
+          echo "LOGS_HOME=${LOGS_HOME}" >> $GITHUB_ENV
+          mkdir -v -p ${LOGS_HOME}/.cache/bluesky/log/
+
+          mkdir -v -p $HOME/.ipython/
+          cp -rv "${CLONED_REPO}" $HOME/.ipython/profile_test
+          rm -fv ~/.ipython/profile_test/startup/*.py
+
+      - name: EPICS env vars
+        shell: bash -leo pipefail {0}
+        run: |
+          {
+              echo "EPICS_CA_AUTO_ADDR_LIST=NO"
+              echo "EPICS_CA_ADDR_LIST=127.0.0.1"
+          } >> $GITHUB_ENV
+
+      - name: Set up Python (for blackhole IOC)
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Start blackhole IOC
+        shell: bash -leo pipefail {0}
+        run: |
+          # Runs on the setup-python interpreter so it does not depend on the
+          # profile's pixi env (which may not include caproto).
+          python3 -m pip install -U caproto
+          # nohup + disown so the IOC survives past this step; record its PID
+          # for a later cleanup step. Each workflow step runs in a fresh shell,
+          # so an EXIT trap here would kill the IOC immediately.
+          nohup python3 $GITHUB_WORKSPACE/spoof_beamline.py < <(echo "") \
+              > /tmp/blackhole_ioc.log 2>&1 &
+          IOC_PID=$!
+          disown
+          echo "BLACKHOLE_IOC_PID=${IOC_PID}" >> $GITHUB_ENV
+          caproto_repeater_path="$(command -v caproto-repeater)"
+          test -n "$caproto_repeater_path"
+          sudo ln -svf "$caproto_repeater_path" "/bin/caRepeater"
+
+      # NOTE: pixi v0.56.0 is the last version supporting [project] in pixi.toml.
+      # v0.67.1+ removed [project] support. If this is upgraded beyond v0.56.0,
+      # all profile-collection pixi.toml files must replace [project] with [workspace].
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@19eac09b398e3d0c747adc7921926a6d802df4da # v0.8.8
+        with:
+          pixi-version: v0.56.0
+          run-install: false
+          cache: false
+
+      - name: Install pixi profile environment
+        shell: bash -leo pipefail {0}
+        run: |
+          pixi --version
+          pixi install --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }}
+
+      - name: Run beamline-specific steps
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -f "${CLONED_REPO}/.ci/bl-specific.sh" ]; then
+              # Activate the profile's pixi env so the script inherits its PATH/env.
+              eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
+              # Non-interactive CI shells need the conda hook for `conda activate`.
+              if command -v conda >/dev/null 2>&1; then
+                  eval "$(conda shell.bash hook)"
+              fi
+              echo "Sourcing ${CLONED_REPO}/.ci/bl-specific.sh"
+              cd "${CLONED_REPO}"
+              source ".ci/bl-specific.sh"
+          fi
+
+      - name: Configure services (pyOlog, databroker, tiled, kafka)
+        shell: bash -leo pipefail {0}
+        run: |
+          cp -v "$GITHUB_WORKSPACE/configs/pyOlog.conf" "$HOME/.pyOlog.conf"
+
+          databroker_conf_dir="$HOME/.config/databroker"
+          mkdir -v -p ${databroker_conf_dir}
+          cp -v "$GITHUB_WORKSPACE/configs/databroker.yml" "${databroker_conf_dir}/_legacy_config.yml"
+          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${BEAMLINE_ACRONYM}.yml
+
+          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
+          mkdir -v -p "${tiled_profiles_dir}"
+          cat << EOF > ${tiled_profiles_dir}/profiles.yml
+          ${ENDSTATION_ACRONYM}:
+            direct:
+              authentication:
+                allow_anonymous_access: true
+              trees:
+              - tree: databroker.mongo_normalized:Tree.from_uri
+                path: /
+                args:
+                  uri: mongodb://localhost:27017/metadatastore-local
+                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
+          EOF
+
+          sudo mkdir -v -p /etc/bluesky/
+          cat << EOF | sudo tee /etc/bluesky/kafka.yml
+          ---
+            abort_run_on_kafka_exception: false
+            bootstrap_servers:
+              - 127.0.0.1:9092
+            runengine_producer_config:
+              security.protocol: PLAINTEXT
+          EOF
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # 1.8.0
+        with:
+          redis-version: '6'
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@5a87bd81f88e2a8b195f8b7b656f5cda1350815a # 1.11.0
+        with:
+          mongodb-version: '4.4'
+
+      - name: Start Kafka
+        shell: bash -leo pipefail {0}
+        run: |
+          # Single-node KRaft broker on localhost:9092 to satisfy the Kafka config
+          # written to /etc/bluesky/kafka.yml and BLUESKY_KAFKA_BOOTSTRAP_SERVERS.
+          docker run -d --name kafka \
+            -p 9092:9092 -p 9093:9093 \
+            -e KAFKA_NODE_ID=1 \
+            -e KAFKA_PROCESS_ROLES=broker,controller \
+            -e KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
+            -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
+            -e KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER \
+            -e KAFKA_CONTROLLER_QUORUM_VOTERS=1@localhost:9093 \
+            -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
+            -e KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT \
+            -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+            -e KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1 \
+            -e KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1 \
+            apache/kafka:3.9.0
+
+          ready=0
+          for i in {1..60}; do
+            if docker exec kafka /opt/kafka/bin/kafka-broker-api-versions.sh \
+                --bootstrap-server localhost:9092 >/dev/null 2>&1; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo "Kafka did not become ready within 60 seconds"
+            docker logs kafka || true
+            exit 1
+          fi
+          echo "Kafka broker is ready"
+
+      - name: Configure DNS and seed Redis
+        shell: bash -leo pipefail {0}
+        run: |
+          # Point per-endstation redis hostname and legacy info DNS at localhost
+          echo "127.0.0.1 ${REDIS_HOST}" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 info.${BEAMLINE_ACRONYM}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 tiled.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 api.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          for i in {1..3}; do
+              echo "127.0.0.1 mongo${i}.nsls2.bnl.gov" | sudo tee -a /etc/hosts
+          done
+
+          sudo apt-get install -y -qq redis-tools stunnel4
+          redis-cli -h ${REDIS_HOST} set "cycle" "\"2025-2\""
+          redis-cli -h ${REDIS_HOST} set "data_session" "\"pass-000000\""
+
+          # Create Redis secret file for profiles that require it with redis_ssl=True.
+          # Our local Redis has no auth, but nslsii.configure_base() still tries to read
+          # the secret file if redis_ssl is enabled. Use empty password for local/test.
+          sudo mkdir -p /etc/bluesky
+          echo "" | sudo tee /etc/bluesky/redis.secret
+          sudo chmod 644 /etc/bluesky/redis.secret
+
+          # Use stunnel to wrap Redis with TLS. Profiles that enable redis_ssl=True
+          # expect to connect on port 6380. Generate a self-signed cert for the Redis
+          # hostname and run stunnel to terminate TLS on 6380, forwarding to :6379.
+          openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes \
+            -keyout /tmp/redis.key \
+            -out /tmp/redis.crt \
+            -subj "/CN=redis" \
+            -addext "subjectAltName=DNS:${REDIS_HOST},IP:127.0.0.1"
+
+          sudo tee /etc/stunnel/stunnel.conf > /dev/null << 'EOF'
+          cert = /tmp/redis.crt
+          key = /tmp/redis.key
+
+          [redis]
+          accept = 127.0.0.1:6380
+          connect = 127.0.0.1:6379
+          EOF
+
+          sudo service stunnel4 restart
+          sleep 1
+
+      - name: Start Tiled and create profiles
+        shell: bash -leo pipefail {0}
+        run: |
+          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
+
+          # Start mock API server for facility/cycles endpoint on port 8080
+          # then forward port 80 to it via iptables
+          python3 << 'MOCK_API_EOF' &
+          from http.server import HTTPServer, BaseHTTPRequestHandler
+          import json
+          
+          class MockAPIHandler(BaseHTTPRequestHandler):
+              def do_GET(self):
+                  if self.path == '/v1/facility/nsls2/cycles/current':
+                      response = {
+                          'cycle': '2025-2',
+                          'start_date': '2025-02-01',
+                          'end_date': '2025-02-28'
+                      }
+                      self.send_response(200)
+                      self.send_header('Content-type', 'application/json')
+                      self.end_headers()
+                      self.wfile.write(json.dumps(response).encode())
+                  else:
+                      self.send_response(404)
+                      self.end_headers()
+              
+              def log_message(self, format, *args):
+                  pass  # suppress logs
+          
+          server = HTTPServer(('127.0.0.1', 8080), MockAPIHandler)
+          try:
+              server.serve_forever()
+          except KeyboardInterrupt:
+              pass
+          finally:
+              server.server_close()
+          MOCK_API_EOF
+          MOCK_API_PID=$!
+          disown
+          echo "MOCK_API_PID=${MOCK_API_PID}" >> $GITHUB_ENV
+          sleep 1
+
+          # Use the same API key profiles export for writes so hardcoded-key
+          # calls can authenticate against this mock Tiled server.
+          TILED_SERVER_API_KEY_VAR="TILED_BLUESKY_WRITING_API_KEY_${BEAMLINE_ACRONYM_UPPER}"
+          TILED_SERVER_API_KEY="${!TILED_SERVER_API_KEY_VAR:-secret}"
+          echo "TILED_API_KEY=${TILED_SERVER_API_KEY}" >> $GITHUB_ENV
+
+          # Generate a short-lived cert for tiled.nsls2.bnl.gov and api.nsls2.bnl.gov.
+          # Both use the same cert since they resolve to 127.0.0.1.
+          openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes \
+            -keyout /tmp/tiled.key \
+            -out /tmp/tiled.crt \
+            -subj "/CN=tiled.nsls2.bnl.gov" \
+            -addext "subjectAltName=DNS:tiled.nsls2.bnl.gov,DNS:api.nsls2.bnl.gov,IP:127.0.0.1"
+
+          # Combine Tiled and Redis certs so all TLS clients (Tiled, redis-py) can verify.
+          cat /tmp/redis.crt /tmp/tiled.crt > /tmp/certs.pem
+          {
+            echo "SSL_CERT_FILE=/tmp/certs.pem"
+            echo "REQUESTS_CA_BUNDLE=/tmp/certs.pem"
+          } >> $GITHUB_ENV
+          export SSL_CERT_FILE=/tmp/certs.pem
+          export REQUESTS_CA_BUNDLE=/tmp/certs.pem
+
+          # Start tiled on a high port (8000) without TLS.
+          TILED_BIN="$(command -v tiled)"
+          nohup "$TILED_BIN" serve catalog --temp \
+            --host 127.0.0.1 \
+            --port 8000 \
+            --api-key "${TILED_SERVER_API_KEY}" > /tmp/tiled.log 2>&1 &
+          TILED_PID=$!
+          disown
+          echo "TILED_PID=${TILED_PID}" >> $GITHUB_ENV
+
+          # Use Caddy as a reverse proxy on 443 with self-signed cert.
+          sudo apt-get install -y -qq caddy
+          # Grant the cap to bind privileged ports so we can run caddy unprivileged
+          # and capture its real PID via $! (avoiding sudo wrapping the process).
+          sudo setcap cap_net_bind_service=+ep "$(command -v caddy)"
+
+          cat > /tmp/Caddyfile << 'CADDYFILE'
+          {
+            admin off
+            auto_https disable_redirects
+          }
+          https://tiled.nsls2.bnl.gov {
+            tls /tmp/tiled.crt /tmp/tiled.key
+            reverse_proxy 127.0.0.1:8000
+          }
+          https://api.nsls2.bnl.gov {
+            tls /tmp/tiled.crt /tmp/tiled.key
+            reverse_proxy 127.0.0.1:8080
+          }
+          CADDYFILE
+
+          nohup caddy run --config /tmp/Caddyfile > /tmp/caddy.log 2>&1 &
+          CADDY_PID=$!
+          disown
+          echo "CADDY_PID=${CADDY_PID}" >> $GITHUB_ENV
+
+          # Phase 1: Tiled direct on 127.0.0.1:8000 (bypasses caddy/TLS).
+          # Use /healthz — doesn't depend on catalog init, designed as the
+          # up/down probe (matches tiled's own SimpleTiledServer readiness logic).
+          tiled_ready=0
+          for i in {1..60}; do
+            if curl --silent --fail http://127.0.0.1:8000/healthz >/dev/null 2>&1; then
+              tiled_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$tiled_ready" -ne 1 ]; then
+            echo "Tiled (direct on :8000) did not become ready within 60 seconds"
+            cat /tmp/tiled.log || true
+            exit 1
+          fi
+
+          # Phase 2: through caddy reverse-proxy + DNS hijack + TLS.
+          proxy_ready=0
+          for i in {1..30}; do
+            if curl --silent --fail --cacert /tmp/tiled.crt \
+              https://tiled.nsls2.bnl.gov/healthz >/dev/null 2>&1; then
+              proxy_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$proxy_ready" -ne 1 ]; then
+            echo "Caddy reverse-proxy (https://tiled.nsls2.bnl.gov) did not become ready within 30 seconds"
+            cat /tmp/caddy.log || true
+            exit 1
+          fi
+
+          # Phase 3: API server through caddy reverse-proxy + TLS.
+          api_ready=0
+          for i in {1..30}; do
+            if curl --silent --fail --cacert /tmp/tiled.crt \
+              https://api.nsls2.bnl.gov/v1/facility/nsls2/cycles/current >/dev/null 2>&1; then
+              api_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$api_ready" -ne 1 ]; then
+            echo "Mock API server (https://api.nsls2.bnl.gov) did not become ready within 30 seconds"
+            cat /tmp/caddy.log || true
+            exit 1
+          fi
+
+          # Write the nsls2 profile ourselves so it carries the api_key via a
+          # preset Authorization header; `tiled profile create` has no api-key
+          # option, and profiles like cms call `from_profile("nsls2", username=None)`
+          # which otherwise tries anonymous access and fails against our
+          # key-protected mock. `api_key` is not an allowed top-level field in
+          # the profile schema, but `headers` is.
+          mkdir -p "$HOME/.config/tiled/profiles"
+          cat > "$HOME/.config/tiled/profiles/nsls2.yml" <<EOF
+          nsls2:
+            uri: https://tiled.nsls2.bnl.gov
+            headers:
+              Authorization: "Apikey ${TILED_SERVER_API_KEY}"
+          EOF
+
+          python3 -c "
+          import os
+          from tiled.client import from_profile
+          tla = os.getenv('BEAMLINE_ACRONYM', 'xyz').lower()
+          TLA = tla.upper()
+          client = from_profile('nsls2', api_key=os.getenv(f'TILED_BLUESKY_WRITING_API_KEY_{TLA}', 'secret'))
+          client.create_container(tla).create_container('raw', specs=['CatalogOfBlueskyRuns'])
+          print(client[tla]['raw'])"
+
+      - name: Apply auto settings
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -f "${CLONED_REPO}/.ci/auto_settings.sav" ]; then
+            while IFS= read -r line; do
+              if [ -n "$line" ]; then
+                  caproto-put $line
+              fi
+            done < "${CLONED_REPO}/.ci/auto_settings.sav"
+          fi
+
+      - name: Run profile startup tests
+        shell: bash -leo pipefail {0}
+        run: |
+          eval "$(pixi shell-hook --manifest-path ${CLONED_REPO}/pixi.toml -e ${{ matrix.pixi-env }})"
+          echo "DEBUG: TILED_API_KEY_LEN=${#TILED_API_KEY}"
+          cd "${CLONED_REPO}"
+
+          if [ "${{ matrix.pixi-env }}" = "terminal" ]; then
+            /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
+            export DISPLAY=:99
+
+            command="
+            import os, glob, sys, traceback
+            ip = get_ipython()
+            startup_files = sorted(glob.glob(os.path.join(os.getcwd(), 'startup/*.py')))
+            if os.path.isfile('.ci/drop-in.py'):
+              startup_files.append('.ci/drop-in.py')
+            if not startup_files:
+              raise SystemExit(f'Cannot find any startup files in {os.getcwd()}')
+            for f in startup_files:
+              if not os.path.isfile(f):
+                raise FileNotFoundError(f'File {f} cannot be found.')
+              print(f'Executing {f} in CI')
+              try:
+                ip.parent._exec_file(f)
+              except Exception as e:
+                print(f'ERROR in {f}:')
+                traceback.print_exc()
+                raise"
+            env | grep EPICS
+            ipython --profile=test -c "$command"
+          else
+            # TODO: queueserver tests disabled for now
+            # nohup start-re-manager --profile-dir=. < /dev/null > /tmp/qs_manager.log 2>&1 &
+            # QS_MANAGER_PID=$!
+            # disown
+            # echo "QS_MANAGER_PID=${QS_MANAGER_PID}" >> $GITHUB_ENV
+
+            # for i in {1..60}; do
+            #   if grep -qF "ZeroMQ server is waiting on" /tmp/qs_manager.log; then
+            #     exit 0
+            #   fi
+            #   sleep 1
+            # done
+
+            # echo "start-re-manager did not become ready within 60 seconds"
+            # kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
+            # exit 1
+            echo "Queueserver tests disabled"
+            exit 0
+          fi
+
+      - name: Show logs
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          show_log() {
+              echo "=== $1 ==="
+              if [ -f "$2" ]; then
+                  cat "$2"
+              else
+                  echo "(not produced)"
+              fi
+          }
+          show_log "Blackhole IOC" /tmp/blackhole_ioc.log
+          show_log "Tiled server" /tmp/tiled.log
+          # show_log "QS manager" /tmp/qs_manager.log  # TODO: re-enable when queueserver tests are active
+          show_log "Caddy reverse proxy" /tmp/caddy.log
+          show_log "Bluesky" "${LOGS_HOME}/.cache/bluesky/log/bluesky.log"
+          show_log "Bluesky IPython" "${LOGS_HOME}/.cache/bluesky/log/bluesky_ipython.log"
+          echo "=== Kafka ==="
+          docker logs kafka 2>&1 || echo "(not produced)"
+
+      - name: Stop QS manager
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          # TODO: re-enable when queueserver tests are active
+          # if [ -n "${QS_MANAGER_PID:-}" ]; then
+          #     kill -SIGINT "${QS_MANAGER_PID}" 2>/dev/null || true
+          # fi
+          true
+
+      - name: Stop Caddy reverse proxy
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${CADDY_PID:-}" ]; then
+            kill -SIGINT "${CADDY_PID}" 2>/dev/null || true
+          fi
+
+      - name: Stop Tiled server
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${TILED_PID:-}" ]; then
+            kill -SIGINT "${TILED_PID}" 2>/dev/null || true
+          fi
+          sudo pkill -SIGINT -f "tiled serve catalog --temp" 2>/dev/null || true
+
+      - name: Stop mock API server
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${MOCK_API_PID:-}" ]; then
+            kill -SIGINT "${MOCK_API_PID}" 2>/dev/null || true
+          fi
+          sudo pkill -f "python3.*MockAPI" 2>/dev/null || true
+
+      - name: Stop stunnel (Redis TLS proxy)
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          sudo service stunnel4 stop 2>/dev/null || true
+          sudo pkill -f stunnel 2>/dev/null || true
+
+      - name: Stop blackhole IOC
+        if: always()
+        shell: bash -leo pipefail {0}
+        run: |
+          if [ -n "${BLACKHOLE_IOC_PID:-}" ]; then
+              kill -SIGINT "${BLACKHOLE_IOC_PID}" 2>/dev/null || true
+          fi
